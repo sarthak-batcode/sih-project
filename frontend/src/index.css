@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-ink-0 text-ash-200 font-sans antialiased;
+    font-feature-settings: "cv05" 1;
+  }
+
+  /* Digits that sit in columns must line up. */
+  .tabular, td, th, .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Keyboard users need to see where they are. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-ink-0 rounded;
+  }
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #070C17; }
+::-webkit-scrollbar-thumb { background: #253247; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #33455F; }
+
+@layer components {
+  /* ---------------------------------------------------------------------
+     ONE card class.
+     The previous sheet had cyber-card, cyber-card-glow and cyber-card-danger,
+     which meant emphasis was a different *surface* — so it spread across the
+     app until every panel glowed. Emphasis is now a modifier on the one
+     surface, and only CRITICAL earns it.
+     --------------------------------------------------------------------- */
+  .cyber-card {
+    @apply bg-ink-100 border border-line rounded-lg shadow-panel transition-colors duration-150;
+  }
+  .cyber-card:hover {
+    @apply border-line-strong;
+  }
+
+  /* The single emphasis treatment in the whole interface. */
+  .card-alarm {
+    @apply bg-ink-100 border rounded-lg;
+    border-color: rgba(255, 77, 109, 0.42);
+    background-image: linear-gradient(135deg, rgba(255, 77, 109, 0.10), transparent 58%);
+  }
+
+  /* Legacy aliases so screens not yet migrated keep rendering sensibly. */
+  .cyber-card-glow   { @apply cyber-card; }
+  .cyber-card-danger { @apply card-alarm; }
+
+  .panel-title {
+    @apply text-sm font-semibold text-ash-100;
+  }
+
+  /* Uppercase is reserved for ONE role: short mono labels. Not headings,
+     not badges, not nav items — applying it everywhere costs about 15%
+     reading speed and flattens the hierarchy it was meant to create. */
+  .label {
+    @apply font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ash-300;
+  }
+
+  .cyber-badge {
+    @apply inline-flex items-center gap-1.5 rounded px-2 py-0.5 font-mono text-[10.5px]
+           font-medium tracking-wide border;
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-lg border border-line-strong bg-ink-100
+           px-3.5 py-2 text-xs font-semibold text-ash-100 transition-colors;
+  }
+  .btn:hover { @apply border-accent text-accent; }
+  .btn:disabled { @apply opacity-50 cursor-not-allowed border-line text-ash-300; }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2.5
+           text-sm font-semibold text-ink-0 transition-opacity;
+  }
+  .btn-primary:hover { @apply opacity-90; }
+  .btn-primary:disabled { @apply opacity-50 cursor-not-allowed; }
+
+  .field {
+    @apply w-full rounded-lg border border-line bg-ink-200 px-3.5 py-2.5 text-sm text-ash-100
+           placeholder:text-ash-300 focus:border-accent focus:outline-none;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-xs font-medium text-ash-200;
+  }
+
+  /* Wide content scrolls inside its own container; the page body never
+     scrolls sideways. */
+  .scroll-x { @apply overflow-x-auto; }
+}
+
+/* Leaflet, themed to match */
+.leaflet-container {
+  background-color: #050810 !important;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif !important;
+}
+.leaflet-popup-content-wrapper {
+  background: #0C1220 !important;
+  color: #E6EDF7 !important;
+  border: 1px solid #2E3D53 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 18px 40px -22px rgba(0, 0, 0, .9) !important;
+}
+.leaflet-popup-tip { background: #0C1220 !important; }
+.leaflet-bar a {
+  background: #0C1220 !important;
+  color: #A9BAD1 !important;
+  border-color: #2E3D53 !important;
+}
+.leaflet-bar a:hover { background: #141C2C !important; color: #E6EDF7 !important; }
+.leaflet-control-attribution {
+  background: rgba(12, 18, 32, .8) !important;
+  color: #6F819A !important;
+}
+.leaflet-control-attribution a { color: #7C9CF5 !important; }
+
+/* Critical-only pulse. Note this is a scale/opacity pulse on the element
+   itself — unlike Tailwind's `ping`, which fades to zero and needs a second
+   solid dot behind it, and which the old RiskBadge used on its only dot. */
+@keyframes risk-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .45; transform: scale(.82); }
+}
+.animate-risk-pulse { animation: risk-pulse 1.8s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}

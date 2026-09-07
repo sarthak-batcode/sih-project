@@ -1,0 +1,82 @@
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Node & Frontend dependencies & build
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+frontend/dist/
+frontend/build/
+.next/
+out/
+
+# Database local storage — the seeded demo DB is rebuilt by
+# `python database/seed_data.py`, so it does not belong in the repo.
+*.sqlite3
+*.db
+*.postgres
+cyber_intelligence.db
+
+# ML Model artifacts (large binaries)
+ml/saved_models/*.joblib
+!ml/saved_models/.gitkeep
+ml/saved_models/*.pkl
+ml/saved_models/*.onnx
+
+# IDE & OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Built offline demo (regenerate with: python demo/build_demo.py)
+demo/cash-out-risk-demo.html
+
+# Test coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/

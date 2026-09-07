@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cash-out risk console · offline demo · SIH26184</title>
+<style>
+:root{
+  --ink-0:#050810; --ink-100:#0C1220; --ink-200:#141C2C; --ink-300:#1B2536;
+  --line:#1E293B; --line-strong:#2E3D53;
+  --text:#E6EDF7; --text-2:#A9BAD1; --text-3:#6F819A;
+  --accent:#2DD4E4; --accent-soft:rgba(45,212,228,.12);
+  --r-low:#34D399; --r-med:#F0B429; --r-high:#FB7185; --r-crit:#FF4D6D;
+  --series:#7C9CF5;
+  --f-ui:'IBM Plex Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  --f-mono:ui-monospace,'JetBrains Mono','SF Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ink-0);color:var(--text-2);font-family:var(--f-ui);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{color:var(--text);margin:0;letter-spacing:-.015em;line-height:1.3}
+button{font-family:inherit}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.label{font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-3)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* ---- chrome ---- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;height:56px;padding:0 16px;border-bottom:1px solid var(--line);background:#070C17;position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.mark{width:30px;height:30px;border-radius:8px;flex:none;display:grid;place-items:center;background:linear-gradient(140deg,#2DD4E4,#3B6FF5);color:#04121A}
+.brand b{display:block;font-size:13px;color:var(--text);font-weight:600}
+.brand span{display:block;font-family:var(--f-mono);font-size:10px;color:var(--text-3)}
+.offline{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:11px;color:var(--text-2);background:var(--ink-100);border:1px solid var(--line);padding:5px 11px;border-radius:999px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--r-low);flex:none}
+
+.shell{display:grid;grid-template-columns:196px 1fr;min-height:calc(100vh - 56px)}
+@media(max-width:820px){.shell{grid-template-columns:1fr}.rail{display:none}}
+.rail{border-right:1px solid var(--line);background:#070C17;padding:16px 9px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.rail nav{display:flex;flex-direction:column;gap:2px}
+.nav{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;border-left:2px solid transparent;font-size:13px;color:var(--text-2);background:none;border-top:0;border-right:0;border-bottom:0;cursor:pointer;text-align:left;width:100%}
+.nav:hover{background:var(--ink-100);color:var(--text)}
+.nav.on{border-left-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.ethics{border:1px solid var(--line);border-radius:8px;padding:11px;background:var(--ink-100);font-size:11px;line-height:1.5;color:var(--text-3)}
+.ethics b{display:block;color:var(--r-med);font-size:11px;margin-bottom:5px}
+main{padding:18px;min-width:0;display:flex;flex-direction:column;gap:14px}
+
+/* ---- surfaces ---- */
+.card{background:var(--ink-100);border:1px solid var(--line);border-radius:8px;padding:14px}
+.card.alarm{border-color:rgba(255,77,109,.42);background-image:linear-gradient(135deg,rgba(255,77,109,.10),transparent 58%)}
+.card h3{font-size:14px;font-weight:600}
+.sub{font-size:12px;color:var(--text-3);margin-top:2px}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:11px}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi-hero{grid-column:span 3}
+@media(max-width:1000px){.kpi-hero{grid-column:span 2}}
+.kt{font-size:12px;color:var(--text-3)}
+.kv{font-size:26px;font-weight:600;color:var(--text);margin-top:5px;font-family:var(--f-ui);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi-hero .kv{font-size:42px;line-height:1.05;color:#FFE3E8}
+.kn{font-size:11.5px;color:var(--text-3);margin-top:4px}
+.chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:11px;color:#FFC9D3;background:rgba(255,77,109,.13);border:1px solid rgba(255,77,109,.3);padding:4px 10px;border-radius:999px;margin-top:9px}
+
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:10.5px;padding:3px 8px;border-radius:4px;border:1px solid}
+.badge.LOW{color:var(--r-low);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)}
+.badge.MEDIUM{color:var(--r-med);border-color:rgba(240,180,41,.35);background:rgba(240,180,41,.08)}
+.badge.HIGH{color:var(--r-high);border-color:rgba(251,113,133,.42);background:rgba(251,113,133,.1)}
+.badge.CRITICAL{color:#FFDCE3;border-color:var(--r-crit);background:rgba(255,77,109,.22);box-shadow:0 0 16px -4px rgba(255,77,109,.6);font-weight:700}
+
+.split{display:grid;grid-template-columns:1.7fr 1fr;gap:14px}
+@media(max-width:1000px){.split{grid-template-columns:1fr}}
+.scroll{overflow-x:auto}
+svg.chart{display:block;width:100%;min-width:520px;height:auto}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--text-2)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+thead th{text-align:left;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);font-weight:500;padding:0 11px 9px;border-bottom:1px solid var(--line)}
+tbody td{padding:10px 11px;border-bottom:1px solid rgba(30,41,59,.6);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+td.z{color:var(--text);font-weight:500}
+td.z small{display:block;font-family:var(--f-mono);font-size:10px;color:var(--text-3);font-weight:400;margin-top:2px}
+td.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--text)}
+.meter{display:inline-flex;align-items:center;gap:8px;justify-content:flex-end}
+.track{width:66px;height:5px;border-radius:3px;background:var(--ink-300);overflow:hidden;flex:none}
+.track i{display:block;height:100%;border-radius:3px}
+
+.alert{display:grid;grid-template-columns:3px 1fr;border:1px solid var(--line);border-radius:8px;background:var(--ink-200);overflow:hidden;margin-bottom:8px}
+.alert .stripe{background:var(--r-med)}
+.alert.HIGH .stripe{background:var(--r-high)}
+.alert.CRITICAL .stripe{background:var(--r-crit)}
+.alert .b{padding:9px 11px}
+.alert .n{font-size:12.5px;font-weight:500;color:var(--text)}
+.alert .m{font-size:11.5px;color:var(--text-2);margin-top:3px;line-height:1.5}
+.alert .t{font-family:var(--f-mono);font-size:10px;color:var(--text-3);margin-top:5px}
+
+/* ---- controls ---- */
+.controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end}
+.ctrl{display:flex;flex-direction:column;gap:5px;min-width:150px}
+.ctrl label{font-size:12px;color:var(--text-2);display:flex;justify-content:space-between;gap:10px}
+.ctrl label b{font-family:var(--f-mono);color:var(--accent);font-weight:500}
+input[type=range]{width:100%;height:5px;background:var(--ink-300);border-radius:3px;accent-color:#2DD4E4;cursor:pointer}
+select,input[type=number]{background:var(--ink-200);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:7px 9px;font-size:13px;font-family:inherit;width:100%}
+select:focus,input:focus{outline:none;border-color:var(--accent)}
+
+.factors{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.factor{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:12.5px}
+.fbar{grid-column:1/-1;height:4px;background:var(--ink-300);border-radius:2px;position:relative;overflow:hidden}
+.fbar i{position:absolute;top:0;bottom:0;left:50%;border-radius:2px}
+.fname{color:var(--text)}
+.fval{font-family:var(--f-mono);font-size:11.5px}
+.up{color:var(--r-high)} .down{color:var(--r-low)}
+.fdesc{grid-column:1/-1;font-size:11px;color:var(--text-3);line-height:1.45}
+
+.mapwrap{position:relative}
+.mapwrap svg{display:block;width:100%;height:auto;background:#070C17;border-radius:8px;border:1px solid var(--line)}
+.zone{cursor:pointer}
+.tip{position:absolute;pointer-events:none;background:var(--ink-100);border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--text);box-shadow:0 18px 40px -22px #000;display:none;z-index:5;max-width:260px}
+.tip .s{display:block;font-family:var(--f-mono);font-size:10.5px;color:var(--text-3);margin-top:3px}
+
+.note{border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;background:var(--ink-100);padding:13px 15px;font-size:12.5px;color:var(--text-2);line-height:1.6}
+.note b{color:var(--text)}
+.note code{font-family:var(--f-mono);font-size:11.5px;background:var(--ink-300);padding:1px 5px;border-radius:3px}
+.hide{display:none!important}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand">
+    <div class="mark"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+    <div><b>Cash-out risk console</b><span>SIH-26184 · offline demo</span></div>
+  </div>
+  <span class="offline"><span class="dot"></span><span id="modelLine">model</span></span>
+</div>
+
+<div class="shell">
+  <aside class="rail">
+    <div>
+      <div class="label" style="padding:0 10px 8px">Modules</div>
+      <nav>
+        <button class="nav on" data-view="overview">Overview</button>
+        <button class="nav" data-view="map">Risk map</button>
+        <button class="nav" data-view="predict">Predictions</button>
+        <button class="nav" data-view="about">About this demo</button>
+      </nav>
+    </div>
+    <div class="ethics">
+      <b>Decision support only</b>
+      Risk scores are advisory probabilities on synthetic telemetry. They inform patrol planning —
+      they are not evidence.
+    </div>
+  </aside>
+
+  <main>
+    <!-- ============================ OVERVIEW ============================ -->
+    <section id="v-overview">
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px">
+        <div>
+          <h1 style="font-size:20px;font-weight:600">Overview</h1>
+          <p class="sub">Where cash-out risk is concentrated, and which zones to brief first.</p>
+        </div>
+        <div class="ctrl" style="min-width:230px">
+          <label>Time of day <b id="hourLabel">23:00</b></label>
+          <input type="range" id="hourSlider" min="0" max="23" value="23">
+        </div>
+      </div>
+
+      <div class="kpis" style="margin-top:14px">
+        <div class="card alarm kpi-hero">
+          <div class="kt">Zones above the intervention threshold</div>
+          <div class="kv" id="kHigh">—</div>
+          <div class="kn" id="kHighSub">—</div>
+          <div class="chip" id="kPeak">—</div>
+        </div>
+        <div class="card"><div class="kt">Complaints</div><div class="kv" id="kComplaints">—</div><div class="kn">90-day synthetic window</div></div>
+        <div class="card"><div class="kt">Cash-out rate</div><div class="kv" id="kRate">—</div><div class="kn">ended in a withdrawal</div></div>
+        <div class="card"><div class="kt">Model ROC-AUC</div><div class="kv" id="kAuc">—</div><div class="kn" id="kAlgo">—</div></div>
+      </div>
+
+      <div class="split" style="margin-top:14px">
+        <div class="card">
+          <h3>Cash-out risk through the day</h3>
+          <p class="sub">Risk rises as complaint volume falls — those are the hours accounts are
+            least likely to be frozen in time.</p>
+          <div class="scroll" style="margin-top:10px"><div id="chart"></div></div>
+          <div class="legend">
+            <span><i style="background:#FF4D6D"></i>Cash-out risk % <span style="color:var(--text-3)">(left)</span></span>
+            <span><i style="background:rgba(124,156,245,.42)"></i>Complaints received <span style="color:var(--text-3)">(right)</span></span>
+            <span><i style="background:rgba(255,77,109,.14)"></i>Night window 21:00–04:00</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Needs a decision</h3>
+          <p class="sub" id="alertSub">—</p>
+          <div id="alerts" style="margin-top:10px"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>Priority zones at <span id="tableHour" class="mono">23:00</span></h3>
+        <p class="sub">Scored live by the model at the selected hour. Move the slider and watch the ranking change.</p>
+        <div class="scroll" style="margin-top:10px">
+          <table>
+            <thead><tr><th>Zone</th><th>Region</th><th style="text-align:right">ATM / POS</th><th style="text-align:right">Baseline</th><th style="text-align:right">Predicted risk</th></tr></thead>
+            <tbody id="zoneRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== MAP ============================== -->
+    <section id="v-map" class="hide">
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px">
+        <div>
+          <h1 style="font-size:20px;font-weight:600">Risk map</h1>
+          <p class="sub">All 100 synthetic surveillance zones, coloured by predicted risk at the selected hour.</p>
+        </div>
+        <div class="ctrl" style="min-width:230px">
+          <label>Time of day <b id="hourLabel2">23:00</b></label>
+          <input type="range" id="hourSlider2" min="0" max="23" value="23">
+        </div>
+      </div>
+      <div class="card mapwrap" style="margin-top:14px">
+        <div id="map"></div>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div class="legend" style="margin-top:2px">
+        <span><i style="background:#34D399"></i>Low</span>
+        <span><i style="background:#F0B429"></i>Medium</span>
+        <span><i style="background:#FB7185"></i>High</span>
+        <span><i style="background:#FF4D6D"></i>Critical</span>
+        <span style="color:var(--text-3)">Marker size = ATM / POS density</span>
+      </div>
+    </section>
+
+    <!-- =========================== PREDICTIONS ========================= -->
+    <section id="v-predict" class="hide">
+      <h1 style="font-size:20px;font-weight:600">Predictions</h1>
+      <p class="sub">Score a single scenario. This runs the same trained model the API serves.</p>
+
+      <div class="split" style="margin-top:14px">
+        <div class="card">
+          <h3>Scenario</h3>
+          <div class="controls" style="margin-top:12px">
+            <div class="ctrl" style="flex:1 1 100%"><label for="pArea">Zone</label><select id="pArea"></select></div>
+            <div class="ctrl"><label>Hour <b id="pHourL">23:00</b></label><input type="range" id="pHour" min="0" max="23" value="23"></div>
+            <div class="ctrl"><label>ATM / POS density <b id="pAtmL">35</b></label><input type="range" id="pAtm" min="5" max="70" value="35"></div>
+            <div class="ctrl"><label>Reporting delay <b id="pDelayL">120 min</b></label><input type="range" id="pDelay" min="5" max="480" step="5" value="120"></div>
+            <div class="ctrl"><label>Prior incidents <b id="pPrevL">8</b></label><input type="range" id="pPrev" min="0" max="25" value="8"></div>
+            <div class="ctrl"><label for="pAmt">Amount (₹)</label><input type="number" id="pAmt" value="45000" min="500" max="500000" step="500"></div>
+            <div class="ctrl"><label for="pType">Payment channel</label><select id="pType"></select></div>
+            <div class="ctrl"><label for="pCat">Fraud category</label><select id="pCat"></select></div>
+            <div class="ctrl"><label for="pDay">Day</label><select id="pDay">
+              <option value="0">Monday</option><option value="1">Tuesday</option><option value="2">Wednesday</option>
+              <option value="3">Thursday</option><option value="4">Friday</option><option value="5" selected>Saturday</option>
+              <option value="6">Sunday</option></select></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Result</h3>
+          <div style="display:flex;align-items:baseline;gap:12px;margin-top:10px">
+            <span class="kv" id="pScore" style="font-size:40px">—</span>
+            <span id="pLevel"></span>
+          </div>
+          <p class="sub" id="pAction" style="margin-top:8px;line-height:1.55"></p>
+          <p class="sub mono" id="pWindow" style="margin-top:6px"></p>
+
+          <div class="label" style="margin-top:16px">What moved this estimate</div>
+          <div class="factors" id="pFactors"></div>
+          <p class="sub" style="margin-top:12px;line-height:1.5">
+            Each figure is produced by re-scoring this exact case with that one input held at its
+            training-set median, then measuring the change. Real attribution from the model, not a
+            hand-written weight.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== ABOUT ============================= -->
+    <section id="v-about" class="hide">
+      <h1 style="font-size:20px;font-weight:600">About this demo</h1>
+      <p class="sub">What this file is, and what it is not.</p>
+
+      <div class="card" style="margin-top:14px;display:flex;flex-direction:column;gap:12px">
+        <div class="note">
+          <b>This is the real model, not a mock-up.</b> The selected classifier is a logistic
+          regression, so the whole thing is 25 coefficients, a scaler and a one-hot encoder. Those
+          were exported from <code>ml/saved_models/best_model.joblib</code> and are evaluated here
+          in JavaScript. A score you read on this page matches what <code>POST /api/v1/predict</code>
+          returns for the same inputs, to four decimal places.
+        </div>
+        <div class="note">
+          <b>No network, no install, no server.</b> Open the file and it works — on a laptop with no
+          Python, no Node, and no connection. It exists so a demo survives a dead venv, a broken
+          <code>npm install</code> or a hall with no Wi-Fi.
+        </div>
+        <div class="note">
+          <b>What it leaves out.</b> Authentication, RBAC, the audit ledger, the SQLite database,
+          operator-configurable thresholds and the governance screens all live in the full stack.
+          There is no login here because there is nothing to protect — the data is synthetic and
+          the file is read-only.
+        </div>
+        <div class="note">
+          <b>The data is synthetic.</b> 100 generated zones and 15,000 generated complaints, seeded
+          at <code>RANDOM_SEED = 42</code>. No real complaint, person, account or location appears
+          anywhere in this project.
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>Model card</h3>
+        <div class="scroll" style="margin-top:10px">
+          <table style="min-width:420px">
+            <tbody id="modelCard"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+/* ===================================================================== */
+/*  DATA — injected at build time by demo/build_demo.py                  */
+/* ===================================================================== */
+const MODEL = /*__MODEL__*/{}/*__END__*/;
+const DATA  = /*__DATA__*/{}/*__END__*/;
+
+/* ===================================================================== */
+/*  MODEL — a logistic regression is a dot product and a sigmoid, so the  */
+/*  exported coefficients reproduce the served model exactly.            */
+/* ===================================================================== */
+function encode(row){
+  const v = [];
+  for (let i = 0; i < MODEL.numeric.length; i++){
+    const name = MODEL.numeric[i];
+    v.push((row[name] - MODEL.means[i]) / MODEL.scales[i]);
+  }
+  MODEL.categorical.forEach((col, ci) => {
+    MODEL.categories[ci].forEach(cat => v.push(row[col] === cat ? 1 : 0));
+  });
+  return v;
+}
+
+function score(row){
+  const v = encode(row);
+  let z = MODEL.intercept;
+  for (let i = 0; i < v.length; i++) z += v[i] * MODEL.coef[i];
+  return 1 / (1 + Math.exp(-z));
+}
+
+function bucketOf(amount){
+  if (amount < 10000) return 'LOW_UNDER_10K';
+  if (amount <= 50000) return 'MID_10K_TO_50K';
+  if (amount <= 200000) return 'HIGH_50K_TO_200K';
+  return 'CRITICAL_ABOVE_200K';
+}
+
+function makeRow(o){
+  const hour = o.hour, dow = o.day_of_week;
+  return {
+    previous_incident_count: o.prev,
+    area_atm_density: o.atm,
+    time_to_report_mins: o.delay,
+    transaction_amount: o.amount,
+    sin_hour: Math.sin(2 * Math.PI * hour / 24),
+    cos_hour: Math.cos(2 * Math.PI * hour / 24),
+    sin_day: Math.sin(2 * Math.PI * dow / 7),
+    cos_day: Math.cos(2 * Math.PI * dow / 7),
+    is_night_window: (hour >= 21 || hour <= 4) ? 1 : 0,
+    is_weekend: dow >= 5 ? 1 : 0,
+    area_baseline_risk_score: o.baseline,
+    transaction_type: o.type,
+    complaint_category: o.category,
+    transaction_amount_bucket: bucketOf(o.amount)
+  };
+}
+
+const CUTS = { critical: 0.80, high: 0.65, medium: 0.40 };
+function levelOf(s){
+  if (s >= CUTS.critical) return 'CRITICAL';
+  if (s >= CUTS.high) return 'HIGH';
+  if (s >= CUTS.medium) return 'MEDIUM';
+  return 'LOW';
+}
+const LEVEL_COLOR = { LOW:'#34D399', MEDIUM:'#F0B429', HIGH:'#FB7185', CRITICAL:'#FF4D6D' };
+const ACTION = {
+  CRITICAL:'Immediate priority alert. Dispatch a mobile patrol unit to the nearest ATM grid within 30 minutes.',
+  HIGH:'High probability of ATM cash-out. Initiate bank nodal freezing and ATM surveillance.',
+  MEDIUM:'Moderate risk pattern. Monitor automated CCTV triggers and flag related beneficiary accounts.',
+  LOW:'Standard routine surveillance. Risk is within the operational baseline.'
+};
+
+/** Scores every zone at one hour, using each zone's own attributes. */
+function scoreAllZones(hour, dow){
+  return DATA.areas.map(a => {
+    const row = makeRow({
+      hour, day_of_week: dow, prev: Math.round(a.b * 15), atm: a.atm,
+      delay: 120, amount: 35000, baseline: a.b,
+      type: 'UPI_FRAUD', category: 'INVESTMENT_MULE_SCAM'
+    });
+    const s = score(row);
+    return { a, s, level: levelOf(s) };
+  }).sort((x, y) => y.s - x.s);
+}
+
+/* ===================================================================== */
+/*  ATTRIBUTION — counterfactual ablation, same method as predict.py     */
+/* ===================================================================== */
+const ATTRIBUTABLE = [
+  ['is_night_window', 'Night cash-out window'],
+  ['area_atm_density', 'ATM / POS density'],
+  ['time_to_report_mins', 'Reporting delay'],
+  ['area_baseline_risk_score', 'Zone standing risk'],
+  ['transaction_type', 'Payment channel'],
+  ['transaction_amount', 'Amount'],
+  ['previous_incident_count', 'Prior incidents in zone'],
+  ['complaint_category', 'Fraud category'],
+];
+
+function attribute(row, prob){
+  const out = [];
+  ATTRIBUTABLE.forEach(([col, label]) => {
+    if (!(col in MODEL.baselines)) return;
+    const cf = Object.assign({}, row);
+    if (col === 'is_night_window'){
+      cf.is_night_window = MODEL.baselines.is_night_window;
+    } else {
+      cf[col] = MODEL.baselines[col];
+    }
+    const delta = prob - score(cf);
+    if (Math.abs(delta) < 0.005) return;
+    out.push({ label, delta, base: MODEL.baselines[col] });
+  });
+  out.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+  return out.slice(0, 6);
+}
+
+/* ===================================================================== */
+/*  RENDER                                                               */
+/* ===================================================================== */
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+const DOW = 5;                                  // Saturday, for the overview
+
+function renderChart(){
+  const H = DATA.hourly.slice().sort((a,b)=>a.hour-b.hour);
+  const W = 720, HT = 250, x0 = 54, x1 = 668, y0 = 20, y1 = 200;
+  const maxVol = Math.max(...H.map(h => h.total_complaints));
+  const volTop = Math.ceil(maxVol / 100) * 100;
+  const px = h => x0 + (h / 23) * (x1 - x0);
+  const pyRisk = r => y1 - (r / 100) * (y1 - y0);
+  const pyVol = v => y1 - (v / volTop) * (y1 - y0);
+  const bw = Math.max(6, (x1 - x0) / 24 - 6);
+
+  const bars = H.map(h =>
+    `<rect x="${(px(h.hour) - bw/2).toFixed(1)}" y="${pyVol(h.total_complaints).toFixed(1)}" width="${bw.toFixed(1)}" height="${(y1 - pyVol(h.total_complaints)).toFixed(1)}" rx="2" fill="#7C9CF5" fill-opacity=".28"/>`
+  ).join('');
+
+  const pts = H.map(h => `${px(h.hour).toFixed(1)} ${pyRisk(h.cash_out_rate).toFixed(1)}`);
+  const line = `M${pts.join(' L')}`;
+  const area = `${line} L${x1} ${y1} L${x0} ${y1} Z`;
+
+  const grid = [0,25,50,75,100].map(v =>
+    `<line x1="${x0}" y1="${pyRisk(v)}" x2="${x1}" y2="${pyRisk(v)}" stroke="#1E293B"/>` +
+    `<text x="${x0-8}" y="${pyRisk(v)+4}" fill="#6F819A" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">${v}%</text>`
+  ).join('');
+
+  const volTicks = [0, volTop/2, volTop].map(v =>
+    `<text x="${x1+8}" y="${pyVol(v)+4}" fill="#5A6C86" font-family="ui-monospace,monospace" font-size="10">${v}</text>`
+  ).join('');
+
+  const xticks = [0,4,8,12,16,20].map(h =>
+    `<text x="${px(h)}" y="${y1+20}" fill="#6F819A" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">${pad(h)}</text>`
+  ).join('');
+
+  $('chart').innerHTML =
+    `<svg class="chart" viewBox="0 0 ${W} ${HT}" role="img" aria-label="Cash-out risk percentage by hour against complaint volume.">
+      <defs><linearGradient id="rf" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FF4D6D" stop-opacity=".32"/>
+        <stop offset="100%" stop-color="#FF4D6D" stop-opacity="0"/></linearGradient></defs>
+      <rect x="${x0}" y="${y0}" width="${px(4)-x0}" height="${y1-y0}" fill="#FF4D6D" fill-opacity=".07"/>
+      <rect x="${px(21)}" y="${y0}" width="${x1-px(21)}" height="${y1-y0}" fill="#FF4D6D" fill-opacity=".07"/>
+      ${grid}${volTicks}
+      <line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}" stroke="#2E3D53"/>
+      ${bars}
+      <path d="${area}" fill="url(#rf)"/>
+      <path d="${line}" fill="none" stroke="#FF4D6D" stroke-width="2.2" stroke-linejoin="round"/>
+      ${xticks}
+      <text x="${(x0+x1)/2}" y="${HT-4}" fill="#5A6C86" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">hour of day · IST</text>
+    </svg>`;
+}
+
+function renderOverview(hour){
+  const scored = scoreAllZones(hour, DOW);
+  const counts = { LOW:0, MEDIUM:0, HIGH:0, CRITICAL:0 };
+  scored.forEach(z => counts[z.level]++);
+  const flagged = counts.HIGH + counts.CRITICAL;
+
+  $('kHigh').textContent = flagged;
+  $('kHighSub').textContent = `of ${scored.length} zones scored at ${pad(hour)}:00 · HIGH or above`;
+
+  // Peak hour, restricted to hours with enough complaints to be meaningful —
+  // a plain max lands on a sparse early-morning hour where the rate is noise.
+  const vols = DATA.hourly.map(h => h.total_complaints).slice().sort((a,b)=>a-b);
+  const median = vols[Math.floor(vols.length/2)];
+  const eligible = DATA.hourly.filter(h => h.total_complaints >= median);
+  const peak = eligible.reduce((a,b) => b.cash_out_rate > a.cash_out_rate ? b : a);
+  $('kPeak').innerHTML = `<span class="dot" style="background:var(--r-crit)"></span>Peak cash-out hour ${pad(peak.hour)}:00 IST · ${peak.cash_out_rate}%`;
+
+  const totalC = DATA.hourly.reduce((s,h) => s + h.total_complaints, 0);
+  const cashOuts = DATA.hourly.reduce((s,h) => s + h.total_complaints * h.cash_out_rate/100, 0);
+  $('kComplaints').textContent = totalC.toLocaleString('en-IN');
+  $('kRate').textContent = (100*cashOuts/totalC).toFixed(1) + '%';
+  $('kAuc').textContent = MODEL.roc_auc.toFixed(3);
+  $('kAlgo').textContent = MODEL.algorithm;
+
+  const alerts = scored.filter(z => z.level === 'HIGH' || z.level === 'CRITICAL').slice(0, 4);
+  $('alertSub').textContent = alerts.length
+    ? `${alerts.length} shown · scored at ${pad(hour)}:00`
+    : `Nothing above the HIGH cut-off at ${pad(hour)}:00`;
+  $('alerts').innerHTML = alerts.map(z => {
+    const row = makeRow({hour, day_of_week:DOW, prev:Math.round(z.a.b*15), atm:z.a.atm,
+                         delay:120, amount:35000, baseline:z.a.b,
+                         type:'UPI_FRAUD', category:'INVESTMENT_MULE_SCAM'});
+    const top = attribute(row, z.s)[0];
+    return `<div class="alert ${z.level}"><span class="stripe"></span><div class="b">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+        <span class="n">${z.a.n}</span>
+        <span class="badge ${z.level}">${z.level} ${(z.s*100).toFixed(0)}%</span>
+      </div>
+      <div class="m">${(z.s*100).toFixed(1)}% cash-out probability at ${pad(hour)}:00 across ${z.a.atm} cash terminals.${
+        top ? ` Largest single factor: ${top.label} (${top.delta>0?'+':''}${(top.delta*100).toFixed(1)}%).` : ''}</div>
+      <div class="t">${z.a.id} · ${z.a.r}</div>
+    </div></div>`;
+  }).join('') || `<p class="sub" style="text-align:center;padding:22px 0">No zone is above the alert threshold at this hour.</p>`;
+
+  $('tableHour').textContent = pad(hour) + ':00';
+  $('zoneRows').innerHTML = scored.slice(0, 8).map(z => `
+    <tr>
+      <td class="z">${z.a.n}<small>${z.a.id} · ${z.a.z}</small></td>
+      <td style="color:var(--text-2)">${z.a.r}</td>
+      <td class="n">${z.a.atm}</td>
+      <td class="n">${z.a.b.toFixed(2)}</td>
+      <td class="n"><span class="meter">
+        <span class="track"><i style="width:${(z.s*100).toFixed(0)}%;background:${LEVEL_COLOR[z.level]}"></i></span>
+        <span class="badge ${z.level}">${(z.s*100).toFixed(0)}%</span></span></td>
+    </tr>`).join('');
+}
+
+function renderMap(hour){
+  const scored = scoreAllZones(hour, DOW);
+  const lats = DATA.areas.map(a => a.la), lons = DATA.areas.map(a => a.lo);
+  const minLa = Math.min(...lats)-0.6, maxLa = Math.max(...lats)+0.6;
+  const minLo = Math.min(...lons)-0.6, maxLo = Math.max(...lons)+0.6;
+  const W = 900, H = 560, pad_ = 30;
+  const px = lo => pad_ + (lo - minLo) / (maxLo - minLo) * (W - 2*pad_);
+  const py = la => H - pad_ - (la - minLa) / (maxLa - minLa) * (H - 2*pad_);
+
+  const circles = scored.map(z => {
+    const r = 4 + Math.sqrt(z.a.atm) * 0.9;
+    return `<circle class="zone" data-id="${z.a.id}" data-name="${z.a.n.replace(/"/g,'&quot;')}"
+      data-score="${(z.s*100).toFixed(1)}" data-level="${z.level}" data-atm="${z.a.atm}"
+      cx="${px(z.a.lo).toFixed(1)}" cy="${py(z.a.la).toFixed(1)}" r="${r.toFixed(1)}"
+      fill="${LEVEL_COLOR[z.level]}" fill-opacity=".5"
+      stroke="${LEVEL_COLOR[z.level]}" stroke-width="1.4"/>`;
+  }).join('');
+
+  // Faint region labels so the clusters are identifiable without a tile layer.
+  const seen = {};
+  const labels = DATA.areas.filter(a => { if (seen[a.r]) return false; seen[a.r]=1; return true; })
+    .map(a => `<text x="${px(a.lo).toFixed(0)}" y="${(py(a.la)-34).toFixed(0)}" fill="#5A6C86"
+       font-family="ui-monospace,monospace" font-size="11" text-anchor="middle">${a.r}</text>`).join('');
+
+  $('map').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img"
+    aria-label="Scatter of 100 synthetic surveillance zones positioned by coordinate and coloured by predicted risk.">
+    <rect width="${W}" height="${H}" fill="#070C17"/>
+    ${labels}${circles}
+    <text x="${W-12}" y="${H-12}" fill="#5A6C86" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">synthetic coordinates · ${pad(hour)}:00 IST</text>
+  </svg>`;
+
+  const tip = $('tip');
+  $('map').querySelectorAll('.zone').forEach(c => {
+    c.addEventListener('mouseenter', e => {
+      const d = e.target.dataset;
+      tip.innerHTML = `<b>${d.name}</b><span class="s">${d.id} · ${d.atm} ATM/POS</span>
+        <span class="s" style="color:${LEVEL_COLOR[d.level]}">${d.level} · ${d.score}%</span>`;
+      tip.style.display = 'block';
+    });
+    c.addEventListener('mousemove', e => {
+      const b = $('map').getBoundingClientRect();
+      tip.style.left = Math.min(e.clientX - b.left + 12, b.width - 270) + 'px';
+      tip.style.top = (e.clientY - b.top + 12) + 'px';
+    });
+    c.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+  });
+}
+
+function renderPredict(){
+  const a = DATA.areas.find(x => x.id === $('pArea').value) || DATA.areas[0];
+  const hour = +$('pHour').value, dow = +$('pDay').value;
+  $('pHourL').textContent = pad(hour) + ':00';
+  $('pAtmL').textContent = $('pAtm').value;
+  $('pDelayL').textContent = $('pDelay').value + ' min';
+  $('pPrevL').textContent = $('pPrev').value;
+
+  const row = makeRow({
+    hour, day_of_week: dow, prev: +$('pPrev').value, atm: +$('pAtm').value,
+    delay: +$('pDelay').value, amount: +$('pAmt').value, baseline: a.b,
+    type: $('pType').value, category: $('pCat').value
+  });
+  const s = score(row), lvl = levelOf(s);
+
+  $('pScore').textContent = (s*100).toFixed(1) + '%';
+  $('pScore').style.color = LEVEL_COLOR[lvl];
+  $('pLevel').innerHTML = `<span class="badge ${lvl}">${lvl}</span>`;
+  $('pAction').textContent = ACTION[lvl];
+  $('pWindow').textContent = `Suggested patrol window ${pad(hour)}:00 – ${pad((hour+3)%24)}:00 IST`;
+
+  const factors = attribute(row, s);
+  $('pFactors').innerHTML = factors.length ? factors.map(f => {
+    const pct = Math.min(48, Math.abs(f.delta) * 260);
+    const up = f.delta > 0;
+    return `<div class="factor">
+      <span class="fname">${f.label}</span>
+      <span class="fval ${up?'up':'down'}">${up?'+':''}${(f.delta*100).toFixed(1)}%</span>
+      <span class="fbar"><i style="${up?`left:50%;width:${pct}%`:`right:50%;left:auto;width:${pct}%`};background:${up?'#FB7185':'#34D399'}"></i></span>
+      <span class="fdesc">Holding this at the dataset norm (${f.base}) moves the estimate to ${((s-f.delta)*100).toFixed(1)}%.</span>
+    </div>`;
+  }).join('') : `<p class="sub">No single input dominates this estimate.</p>`;
+}
+
+function renderModelCard(){
+  const rows = [
+    ['Algorithm', MODEL.algorithm],
+    ['Version', MODEL.version],
+    ['ROC-AUC (out-of-time test)', MODEL.roc_auc.toFixed(4)],
+    ['Selection metric', 'ROC-AUC — the positive class is the majority, so F1 rewards answering "yes" to everything'],
+    ['Features', MODEL.numeric.length + MODEL.categorical.length + ' (' + MODEL.coef.length + ' after encoding)'],
+    ['Excluded as leakage', 'label_generation_prob — the quantity the synthetic label was drawn from'],
+    ['Attribution', 'Counterfactual ablation against training-set baselines'],
+    ['Zones', DATA.areas.length + ' synthetic surveillance areas'],
+  ];
+  $('modelCard').innerHTML = rows.map(([k,v]) =>
+    `<tr><td class="z" style="width:38%">${k}</td><td style="color:var(--text-2)">${v}</td></tr>`).join('');
+}
+
+/* ===================================================================== */
+/*  WIRING                                                               */
+/* ===================================================================== */
+function init(){
+  $('modelLine').textContent = MODEL.algorithm + ' · AUC ' + MODEL.roc_auc.toFixed(3);
+
+  // navigation
+  document.querySelectorAll('.nav').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.nav').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    ['overview','map','predict','about'].forEach(v =>
+      $('v-'+v).classList.toggle('hide', v !== b.dataset.view));
+    if (b.dataset.view === 'map') renderMap(+$('hourSlider2').value);
+  }));
+
+  // hour sliders stay in sync
+  const sync = h => {
+    $('hourSlider').value = h; $('hourSlider2').value = h;
+    $('hourLabel').textContent = pad(h) + ':00';
+    $('hourLabel2').textContent = pad(h) + ':00';
+    renderOverview(h);
+    if (!$('v-map').classList.contains('hide')) renderMap(h);
+  };
+  $('hourSlider').addEventListener('input', e => sync(+e.target.value));
+  $('hourSlider2').addEventListener('input', e => sync(+e.target.value));
+
+  // prediction form
+  $('pArea').innerHTML = DATA.areas.map(a =>
+    `<option value="${a.id}">${a.n} (baseline ${a.b.toFixed(2)})</option>`).join('');
+  const typeIdx = MODEL.categorical.indexOf('transaction_type');
+  const catIdx  = MODEL.categorical.indexOf('complaint_category');
+  $('pType').innerHTML = MODEL.categories[typeIdx].map(c =>
+    `<option${c==='AEPS_SPOOF'?' selected':''}>${c}</option>`).join('');
+  $('pCat').innerHTML = MODEL.categories[catIdx].map(c =>
+    `<option${c==='INVESTMENT_MULE_SCAM'?' selected':''}>${c}</option>`).join('');
+  ['pArea','pHour','pAtm','pDelay','pPrev','pAmt','pType','pCat','pDay'].forEach(id =>
+    $(id).addEventListener('input', renderPredict));
+  $('pArea').addEventListener('change', () => {
+    const a = DATA.areas.find(x => x.id === $('pArea').value);
+    if (a) { $('pAtm').value = a.atm; $('pPrev').value = Math.round(a.b*15); }
+    renderPredict();
+  });
+
+  renderChart();
+  sync(23);
+  renderPredict();
+  renderModelCard();
+}
+init();
+</script>
+</body>
+</html>

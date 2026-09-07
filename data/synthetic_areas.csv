@@ -1,0 +1,101 @@
+area_id,area_name,district,state,region,zone_type,latitude,longitude,radius_km,atm_pos_density,baseline_risk_score,risk_category,active_surveillance
+AREA-CA-101,Capital-Metro-District-A University Campus Zone Sector-1,Capital-Metro-District-A,State-National-Capital,Capital-Metro,University Campus Zone,28.653637,77.197939,1.8,18,0.41,MEDIUM,False
+AREA-CA-102,Capital-Metro-District-B University Campus Zone Sector-2,Capital-Metro-District-B,State-National-Capital,Capital-Metro,University Campus Zone,28.740237,77.270395,2.3,19,0.41,MEDIUM,False
+AREA-CA-103,Capital-Metro-District-C High-Density Transit Node Sector-3,Capital-Metro-District-C,State-National-Capital,Capital-Metro,High-Density Transit Node,28.475907,77.164017,1.9,37,0.627,MEDIUM,True
+AREA-CA-104,Capital-Metro-District-D Commercial ATM Hub Sector-4,Capital-Metro-District-D,State-National-Capital,Capital-Metro,Commercial ATM Hub,28.619302,77.09502,3.5,47,0.375,LOW,False
+AREA-CA-105,Capital-Metro-District-E Tech Park Outskirts Sector-5,Capital-Metro-District-E,State-National-Capital,Capital-Metro,Tech Park Outskirts,28.565849,77.185665,1.8,25,0.572,MEDIUM,True
+AREA-CA-106,Capital-Metro-District-F Suburban Residential Zone Sector-6,Capital-Metro-District-F,State-National-Capital,Capital-Metro,Suburban Residential Zone,28.679704,77.111333,1.6,10,0.278,LOW,False
+AREA-CA-107,Capital-Metro-District-A Commercial ATM Hub Sector-7,Capital-Metro-District-A,State-National-Capital,Capital-Metro,Commercial ATM Hub,28.672977,77.222709,2.2,34,0.622,MEDIUM,True
+AREA-CA-108,Capital-Metro-District-B Tech Park Outskirts Sector-8,Capital-Metro-District-B,State-National-Capital,Capital-Metro,Tech Park Outskirts,28.577049,77.29357,3.3,19,0.53,MEDIUM,True
+AREA-CA-109,Capital-Metro-District-C Tech Park Outskirts Sector-9,Capital-Metro-District-C,State-National-Capital,Capital-Metro,Tech Park Outskirts,28.559746,77.257934,2.1,25,0.404,MEDIUM,False
+AREA-CA-110,Capital-Metro-District-D University Campus Zone Sector-10,Capital-Metro-District-D,State-National-Capital,Capital-Metro,University Campus Zone,28.575566,77.194147,3.6,13,0.377,LOW,False
+AREA-CA-111,Capital-Metro-District-E Suburban Residential Zone Sector-11,Capital-Metro-District-E,State-National-Capital,Capital-Metro,Suburban Residential Zone,28.642831,77.15739,2.2,15,0.299,LOW,False
+AREA-CA-112,Capital-Metro-District-F Tech Park Outskirts Sector-12,Capital-Metro-District-F,State-National-Capital,Capital-Metro,Tech Park Outskirts,28.620864,77.185079,2.3,19,0.409,MEDIUM,False
+AREA-CA-113,Capital-Metro-District-A Marketplace & Trade Center Sector-13,Capital-Metro-District-A,State-National-Capital,Capital-Metro,Marketplace & Trade Center,28.549221,77.168859,1.5,42,0.433,MEDIUM,False
+AREA-CA-114,Capital-Metro-District-B Marketplace & Trade Center Sector-14,Capital-Metro-District-B,State-National-Capital,Capital-Metro,Marketplace & Trade Center,28.557736,77.182787,2.0,34,0.572,MEDIUM,True
+AREA-CA-115,Capital-Metro-District-C Suburban Residential Zone Sector-15,Capital-Metro-District-C,State-National-Capital,Capital-Metro,Suburban Residential Zone,28.50067,77.175348,2.5,7,0.347,LOW,False
+AREA-CA-116,Capital-Metro-District-D High-Density Transit Node Sector-16,Capital-Metro-District-D,State-National-Capital,Capital-Metro,High-Density Transit Node,28.634504,77.203044,2.1,51,0.291,LOW,False
+AREA-CA-117,Capital-Metro-District-E Marketplace & Trade Center Sector-17,Capital-Metro-District-E,State-National-Capital,Capital-Metro,Marketplace & Trade Center,28.618718,77.406059,2.5,26,0.503,MEDIUM,True
+AREA-CA-118,Capital-Metro-District-F Commercial ATM Hub Sector-18,Capital-Metro-District-F,State-National-Capital,Capital-Metro,Commercial ATM Hub,28.705326,77.269155,2.6,39,0.905,HIGH,True
+AREA-CA-119,Capital-Metro-District-A Industrial Cyber Cluster Sector-19,Capital-Metro-District-A,State-National-Capital,Capital-Metro,Industrial Cyber Cluster,28.534657,77.163696,4.0,54,0.356,LOW,False
+AREA-CA-120,Capital-Metro-District-B Tech Park Outskirts Sector-20,Capital-Metro-District-B,State-National-Capital,Capital-Metro,Tech Park Outskirts,28.540346,77.332995,2.3,31,0.412,MEDIUM,False
+AREA-CA-121,Capital-Metro-District-C Commercial ATM Hub Sector-21,Capital-Metro-District-C,State-National-Capital,Capital-Metro,Commercial ATM Hub,28.678981,77.110531,3.7,52,0.329,LOW,False
+AREA-CA-122,Capital-Metro-District-D Tech Park Outskirts Sector-22,Capital-Metro-District-D,State-National-Capital,Capital-Metro,Tech Park Outskirts,28.634691,77.271546,1.9,20,0.482,MEDIUM,False
+AREA-CA-123,Capital-Metro-District-E Suburban Residential Zone Sector-23,Capital-Metro-District-E,State-National-Capital,Capital-Metro,Suburban Residential Zone,28.559498,77.22758,1.7,13,0.452,MEDIUM,False
+AREA-CA-124,Capital-Metro-District-F Industrial Cyber Cluster Sector-24,Capital-Metro-District-F,State-National-Capital,Capital-Metro,Industrial Cyber Cluster,28.763162,77.246907,4.0,53,0.374,LOW,False
+AREA-CA-125,Capital-Metro-District-A Tech Park Outskirts Sector-25,Capital-Metro-District-A,State-National-Capital,Capital-Metro,Tech Park Outskirts,28.69097,77.242022,4.2,24,0.517,MEDIUM,True
+AREA-FI-126,Financial-Hub-District-A Industrial Cyber Cluster Sector-1,Financial-Hub-District-A,State-West-Coast,Financial-Hub,Industrial Cyber Cluster,19.069832,72.904992,3.2,60,0.443,MEDIUM,False
+AREA-FI-127,Financial-Hub-District-B University Campus Zone Sector-2,Financial-Hub-District-B,State-West-Coast,Financial-Hub,University Campus Zone,19.126053,72.809127,1.7,12,0.294,LOW,False
+AREA-FI-128,Financial-Hub-District-C University Campus Zone Sector-3,Financial-Hub-District-C,State-West-Coast,Financial-Hub,University Campus Zone,19.058123,72.93482,2.2,12,0.32,LOW,False
+AREA-FI-129,Financial-Hub-District-D Industrial Cyber Cluster Sector-4,Financial-Hub-District-D,State-West-Coast,Financial-Hub,Industrial Cyber Cluster,19.089854,72.908525,4.5,51,0.818,HIGH,True
+AREA-FI-130,Financial-Hub-District-E Marketplace & Trade Center Sector-5,Financial-Hub-District-E,State-West-Coast,Financial-Hub,Marketplace & Trade Center,19.162644,72.962004,2.2,37,0.568,MEDIUM,True
+AREA-FI-131,Financial-Hub-District-F Commercial ATM Hub Sector-6,Financial-Hub-District-F,State-West-Coast,Financial-Hub,Commercial ATM Hub,19.117204,73.185919,2.6,51,0.63,MEDIUM,True
+AREA-FI-132,Financial-Hub-District-A Suburban Residential Zone Sector-7,Financial-Hub-District-A,State-West-Coast,Financial-Hub,Suburban Residential Zone,19.014174,72.858755,3.4,13,0.553,MEDIUM,True
+AREA-FI-133,Financial-Hub-District-B Industrial Cyber Cluster Sector-8,Financial-Hub-District-B,State-West-Coast,Financial-Hub,Industrial Cyber Cluster,19.038245,72.964816,2.0,41,0.42,MEDIUM,False
+AREA-FI-134,Financial-Hub-District-C Industrial Cyber Cluster Sector-9,Financial-Hub-District-C,State-West-Coast,Financial-Hub,Industrial Cyber Cluster,19.079646,72.825572,2.1,51,0.285,LOW,False
+AREA-FI-135,Financial-Hub-District-D Industrial Cyber Cluster Sector-10,Financial-Hub-District-D,State-West-Coast,Financial-Hub,Industrial Cyber Cluster,19.012598,72.868521,3.6,58,0.463,MEDIUM,False
+AREA-FI-136,Financial-Hub-District-E University Campus Zone Sector-11,Financial-Hub-District-E,State-West-Coast,Financial-Hub,University Campus Zone,19.217236,72.910099,3.4,17,0.469,MEDIUM,False
+AREA-FI-137,Financial-Hub-District-F Tech Park Outskirts Sector-12,Financial-Hub-District-F,State-West-Coast,Financial-Hub,Tech Park Outskirts,19.177353,72.821086,3.4,11,0.435,MEDIUM,False
+AREA-FI-138,Financial-Hub-District-A Tech Park Outskirts Sector-13,Financial-Hub-District-A,State-West-Coast,Financial-Hub,Tech Park Outskirts,18.816699,72.795749,3.7,17,0.677,HIGH,True
+AREA-FI-139,Financial-Hub-District-B High-Density Transit Node Sector-14,Financial-Hub-District-B,State-West-Coast,Financial-Hub,High-Density Transit Node,19.191302,72.762831,2.9,35,0.365,LOW,False
+AREA-FI-140,Financial-Hub-District-C Industrial Cyber Cluster Sector-15,Financial-Hub-District-C,State-West-Coast,Financial-Hub,Industrial Cyber Cluster,19.081584,72.846875,4.5,64,0.945,HIGH,True
+AREA-FI-141,Financial-Hub-District-D University Campus Zone Sector-16,Financial-Hub-District-D,State-West-Coast,Financial-Hub,University Campus Zone,19.063857,72.924765,3.6,11,0.48,MEDIUM,False
+AREA-FI-142,Financial-Hub-District-E High-Density Transit Node Sector-17,Financial-Hub-District-E,State-West-Coast,Financial-Hub,High-Density Transit Node,19.028851,72.945668,3.6,27,0.605,MEDIUM,True
+AREA-FI-143,Financial-Hub-District-F Marketplace & Trade Center Sector-18,Financial-Hub-District-F,State-West-Coast,Financial-Hub,Marketplace & Trade Center,19.00968,72.832886,3.8,45,0.549,MEDIUM,True
+AREA-FI-144,Financial-Hub-District-A Commercial ATM Hub Sector-19,Financial-Hub-District-A,State-West-Coast,Financial-Hub,Commercial ATM Hub,19.119768,72.861525,2.2,53,0.595,MEDIUM,True
+AREA-FI-145,Financial-Hub-District-B Commercial ATM Hub Sector-20,Financial-Hub-District-B,State-West-Coast,Financial-Hub,Commercial ATM Hub,19.180438,72.87938,3.9,41,0.657,HIGH,True
+AREA-FI-146,Financial-Hub-District-C Suburban Residential Zone Sector-21,Financial-Hub-District-C,State-West-Coast,Financial-Hub,Suburban Residential Zone,19.010542,73.045091,2.3,10,0.404,MEDIUM,False
+AREA-FI-147,Financial-Hub-District-D High-Density Transit Node Sector-22,Financial-Hub-District-D,State-West-Coast,Financial-Hub,High-Density Transit Node,19.07502,72.80592,4.2,23,0.664,HIGH,True
+AREA-FI-148,Financial-Hub-District-E Tech Park Outskirts Sector-23,Financial-Hub-District-E,State-West-Coast,Financial-Hub,Tech Park Outskirts,19.109035,72.832602,4.1,24,0.535,MEDIUM,True
+AREA-FI-149,Financial-Hub-District-F Industrial Cyber Cluster Sector-24,Financial-Hub-District-F,State-West-Coast,Financial-Hub,Industrial Cyber Cluster,19.038317,72.896264,2.1,47,0.534,MEDIUM,True
+AREA-FI-150,Financial-Hub-District-A Suburban Residential Zone Sector-25,Financial-Hub-District-A,State-West-Coast,Financial-Hub,Suburban Residential Zone,19.144613,72.864905,2.7,7,0.403,MEDIUM,False
+AREA-TE-151,Tech-Corridor-District-A University Campus Zone Sector-1,Tech-Corridor-District-A,State-South-Plateau,Tech-Corridor,University Campus Zone,12.997417,77.528422,2.9,18,0.372,LOW,False
+AREA-TE-152,Tech-Corridor-District-B Industrial Cyber Cluster Sector-2,Tech-Corridor-District-B,State-South-Plateau,Tech-Corridor,Industrial Cyber Cluster,12.989527,77.595607,1.9,37,0.552,MEDIUM,True
+AREA-TE-153,Tech-Corridor-District-C University Campus Zone Sector-3,Tech-Corridor-District-C,State-South-Plateau,Tech-Corridor,University Campus Zone,13.143855,77.533212,3.2,6,0.567,MEDIUM,True
+AREA-TE-154,Tech-Corridor-District-D Industrial Cyber Cluster Sector-4,Tech-Corridor-District-D,State-South-Plateau,Tech-Corridor,Industrial Cyber Cluster,12.801688,77.55254,3.7,52,0.444,MEDIUM,False
+AREA-TE-155,Tech-Corridor-District-E Suburban Residential Zone Sector-5,Tech-Corridor-District-E,State-South-Plateau,Tech-Corridor,Suburban Residential Zone,12.899727,77.633954,4.2,13,0.477,MEDIUM,False
+AREA-TE-156,Tech-Corridor-District-F Suburban Residential Zone Sector-6,Tech-Corridor-District-F,State-South-Plateau,Tech-Corridor,Suburban Residential Zone,12.834549,77.70291,2.6,16,0.299,LOW,False
+AREA-TE-157,Tech-Corridor-District-A High-Density Transit Node Sector-7,Tech-Corridor-District-A,State-South-Plateau,Tech-Corridor,High-Density Transit Node,12.972019,77.598358,3.0,42,0.412,MEDIUM,False
+AREA-TE-158,Tech-Corridor-District-B Commercial ATM Hub Sector-8,Tech-Corridor-District-B,State-South-Plateau,Tech-Corridor,Commercial ATM Hub,13.028529,77.504629,3.8,47,0.75,HIGH,True
+AREA-TE-159,Tech-Corridor-District-C Marketplace & Trade Center Sector-9,Tech-Corridor-District-C,State-South-Plateau,Tech-Corridor,Marketplace & Trade Center,13.065944,77.600001,1.8,41,0.424,MEDIUM,False
+AREA-TE-160,Tech-Corridor-District-D University Campus Zone Sector-10,Tech-Corridor-District-D,State-South-Plateau,Tech-Corridor,University Campus Zone,13.02323,77.704091,2.0,17,0.584,MEDIUM,True
+AREA-TE-161,Tech-Corridor-District-E University Campus Zone Sector-11,Tech-Corridor-District-E,State-South-Plateau,Tech-Corridor,University Campus Zone,12.950047,77.652003,2.8,15,0.579,MEDIUM,True
+AREA-TE-162,Tech-Corridor-District-F Commercial ATM Hub Sector-12,Tech-Corridor-District-F,State-South-Plateau,Tech-Corridor,Commercial ATM Hub,12.835329,77.590156,2.7,45,0.332,LOW,False
+AREA-TE-163,Tech-Corridor-District-A Tech Park Outskirts Sector-13,Tech-Corridor-District-A,State-South-Plateau,Tech-Corridor,Tech Park Outskirts,13.000928,77.51941,4.5,17,0.377,LOW,False
+AREA-TE-164,Tech-Corridor-District-B Tech Park Outskirts Sector-14,Tech-Corridor-District-B,State-South-Plateau,Tech-Corridor,Tech Park Outskirts,12.929179,77.53117,2.3,17,0.562,MEDIUM,True
+AREA-TE-165,Tech-Corridor-District-C Tech Park Outskirts Sector-15,Tech-Corridor-District-C,State-South-Plateau,Tech-Corridor,Tech Park Outskirts,13.128778,77.597421,4.1,24,0.473,MEDIUM,False
+AREA-TE-166,Tech-Corridor-District-D Commercial ATM Hub Sector-16,Tech-Corridor-District-D,State-South-Plateau,Tech-Corridor,Commercial ATM Hub,12.92916,77.548535,3.5,42,0.275,LOW,False
+AREA-TE-167,Tech-Corridor-District-E Commercial ATM Hub Sector-17,Tech-Corridor-District-E,State-South-Plateau,Tech-Corridor,Commercial ATM Hub,13.017725,77.6195,3.5,45,0.726,HIGH,True
+AREA-TE-168,Tech-Corridor-District-F Tech Park Outskirts Sector-18,Tech-Corridor-District-F,State-South-Plateau,Tech-Corridor,Tech Park Outskirts,12.911092,77.48082,3.8,18,0.521,MEDIUM,True
+AREA-TE-169,Tech-Corridor-District-A Marketplace & Trade Center Sector-19,Tech-Corridor-District-A,State-South-Plateau,Tech-Corridor,Marketplace & Trade Center,12.977789,77.525697,3.4,42,0.439,MEDIUM,False
+AREA-TE-170,Tech-Corridor-District-B Commercial ATM Hub Sector-20,Tech-Corridor-District-B,State-South-Plateau,Tech-Corridor,Commercial ATM Hub,13.045694,77.747353,2.4,47,0.566,MEDIUM,True
+AREA-IN-171,Industrial-Belt-District-A High-Density Transit Node Sector-1,Industrial-Belt-District-A,State-East-Zone,Industrial-Belt,High-Density Transit Node,22.576482,88.297424,2.9,26,0.389,LOW,False
+AREA-IN-172,Industrial-Belt-District-B University Campus Zone Sector-2,Industrial-Belt-District-B,State-East-Zone,Industrial-Belt,University Campus Zone,22.580547,88.424011,4.1,16,0.32,LOW,False
+AREA-IN-173,Industrial-Belt-District-C Industrial Cyber Cluster Sector-3,Industrial-Belt-District-C,State-East-Zone,Industrial-Belt,Industrial Cyber Cluster,22.442397,88.367747,4.4,40,0.939,HIGH,True
+AREA-IN-174,Industrial-Belt-District-D Marketplace & Trade Center Sector-4,Industrial-Belt-District-D,State-East-Zone,Industrial-Belt,Marketplace & Trade Center,22.520453,88.367692,2.0,37,0.753,HIGH,True
+AREA-IN-175,Industrial-Belt-District-E Commercial ATM Hub Sector-5,Industrial-Belt-District-E,State-East-Zone,Industrial-Belt,Commercial ATM Hub,22.614984,88.479225,4.1,44,0.699,HIGH,True
+AREA-IN-176,Industrial-Belt-District-F Industrial Cyber Cluster Sector-6,Industrial-Belt-District-F,State-East-Zone,Industrial-Belt,Industrial Cyber Cluster,22.602292,88.315581,4.0,64,0.657,HIGH,True
+AREA-IN-177,Industrial-Belt-District-A Tech Park Outskirts Sector-7,Industrial-Belt-District-A,State-East-Zone,Industrial-Belt,Tech Park Outskirts,22.599608,88.33095,3.3,17,0.539,MEDIUM,True
+AREA-IN-178,Industrial-Belt-District-B High-Density Transit Node Sector-8,Industrial-Belt-District-B,State-East-Zone,Industrial-Belt,High-Density Transit Node,22.64229,88.337818,2.6,33,0.356,LOW,False
+AREA-IN-179,Industrial-Belt-District-C High-Density Transit Node Sector-9,Industrial-Belt-District-C,State-East-Zone,Industrial-Belt,High-Density Transit Node,22.574073,88.498015,3.1,30,0.846,HIGH,True
+AREA-IN-180,Industrial-Belt-District-D Marketplace & Trade Center Sector-10,Industrial-Belt-District-D,State-East-Zone,Industrial-Belt,Marketplace & Trade Center,22.454313,88.4554,4.3,32,0.414,MEDIUM,False
+AREA-IN-181,Industrial-Belt-District-E Commercial ATM Hub Sector-11,Industrial-Belt-District-E,State-East-Zone,Industrial-Belt,Commercial ATM Hub,22.535851,88.295912,3.3,40,0.676,HIGH,True
+AREA-IN-182,Industrial-Belt-District-F Suburban Residential Zone Sector-12,Industrial-Belt-District-F,State-East-Zone,Industrial-Belt,Suburban Residential Zone,22.655603,88.323099,1.6,7,0.33,LOW,False
+AREA-IN-183,Industrial-Belt-District-A Industrial Cyber Cluster Sector-13,Industrial-Belt-District-A,State-East-Zone,Industrial-Belt,Industrial Cyber Cluster,22.642168,88.472351,4.1,54,0.715,HIGH,True
+AREA-IN-184,Industrial-Belt-District-B Marketplace & Trade Center Sector-14,Industrial-Belt-District-B,State-East-Zone,Industrial-Belt,Marketplace & Trade Center,22.430302,88.483584,3.9,39,0.76,HIGH,True
+AREA-IN-185,Industrial-Belt-District-C High-Density Transit Node Sector-15,Industrial-Belt-District-C,State-East-Zone,Industrial-Belt,High-Density Transit Node,22.581352,88.421961,1.7,39,0.589,MEDIUM,True
+AREA-CE-186,Central-Grid-District-A Tech Park Outskirts Sector-1,Central-Grid-District-A,State-Central-Valley,Central-Grid,Tech Park Outskirts,21.066632,79.078137,4.3,16,0.378,LOW,False
+AREA-CE-187,Central-Grid-District-B Commercial ATM Hub Sector-2,Central-Grid-District-B,State-Central-Valley,Central-Grid,Commercial ATM Hub,21.133159,79.05405,3.7,52,0.726,HIGH,True
+AREA-CE-188,Central-Grid-District-C Marketplace & Trade Center Sector-3,Central-Grid-District-C,State-Central-Valley,Central-Grid,Marketplace & Trade Center,21.042603,78.984594,1.7,45,0.761,HIGH,True
+AREA-CE-189,Central-Grid-District-D Marketplace & Trade Center Sector-4,Central-Grid-District-D,State-Central-Valley,Central-Grid,Marketplace & Trade Center,20.930049,79.083856,3.1,50,0.638,MEDIUM,True
+AREA-CE-190,Central-Grid-District-E High-Density Transit Node Sector-5,Central-Grid-District-E,State-Central-Valley,Central-Grid,High-Density Transit Node,21.124289,78.999678,1.9,35,0.546,MEDIUM,True
+AREA-CE-191,Central-Grid-District-F Suburban Residential Zone Sector-6,Central-Grid-District-F,State-Central-Valley,Central-Grid,Suburban Residential Zone,21.099907,79.044451,4.3,13,0.29,LOW,False
+AREA-CE-192,Central-Grid-District-A High-Density Transit Node Sector-7,Central-Grid-District-A,State-Central-Valley,Central-Grid,High-Density Transit Node,21.245487,78.922329,2.3,28,0.437,MEDIUM,False
+AREA-CE-193,Central-Grid-District-B Marketplace & Trade Center Sector-8,Central-Grid-District-B,State-Central-Valley,Central-Grid,Marketplace & Trade Center,21.220654,79.189924,3.3,35,0.436,MEDIUM,False
+AREA-CE-194,Central-Grid-District-C High-Density Transit Node Sector-9,Central-Grid-District-C,State-Central-Valley,Central-Grid,High-Density Transit Node,21.126574,79.058214,4.3,41,0.342,LOW,False
+AREA-CE-195,Central-Grid-District-D Marketplace & Trade Center Sector-10,Central-Grid-District-D,State-Central-Valley,Central-Grid,Marketplace & Trade Center,21.171891,78.988111,3.7,38,0.385,LOW,False
+AREA-CE-196,Central-Grid-District-E High-Density Transit Node Sector-11,Central-Grid-District-E,State-Central-Valley,Central-Grid,High-Density Transit Node,21.02127,79.136681,3.6,37,0.228,LOW,False
+AREA-CE-197,Central-Grid-District-F Suburban Residential Zone Sector-12,Central-Grid-District-F,State-Central-Valley,Central-Grid,Suburban Residential Zone,21.102206,79.120131,4.5,17,0.381,LOW,False
+AREA-CE-198,Central-Grid-District-A University Campus Zone Sector-13,Central-Grid-District-A,State-Central-Valley,Central-Grid,University Campus Zone,21.170424,78.951387,2.6,17,0.437,MEDIUM,False
+AREA-CE-199,Central-Grid-District-B Tech Park Outskirts Sector-14,Central-Grid-District-B,State-Central-Valley,Central-Grid,Tech Park Outskirts,21.102619,79.025936,2.9,15,0.656,HIGH,True
+AREA-CE-200,Central-Grid-District-C High-Density Transit Node Sector-15,Central-Grid-District-C,State-Central-Valley,Central-Grid,High-Density Transit Node,21.166282,79.166815,2.2,37,0.432,MEDIUM,False

@@ -1,0 +1,704 @@
+{
+  "version": "v2.0.0-leak-free",
+  "algorithm": "Logistic Regression (Baseline)",
+  "selection_metric": "roc_auc (ties within 0.01 resolved toward the simpler model)",
+  "importance_basis": "absolute standardised coefficient (linear model)",
+  "trained_at": "2026-09-07 16:07:44",
+  "training_records": 12000,
+  "test_records": 3000,
+  "metrics_comparison": {
+    "Logistic Regression (Baseline)": {
+      "accuracy": 0.6643,
+      "precision": 0.7327,
+      "recall": 0.6531,
+      "f1_score": 0.6906,
+      "roc_auc": 0.7257,
+      "confusion_matrix": [
+        [
+          869,
+          410
+        ],
+        [
+          597,
+          1124
+        ]
+      ],
+      "roc_curve_sample": [
+        {
+          "fpr": 0.0,
+          "tpr": 0.0
+        },
+        {
+          "fpr": 0.0203,
+          "tpr": 0.0604
+        },
+        {
+          "fpr": 0.0453,
+          "tpr": 0.1156
+        },
+        {
+          "fpr": 0.0672,
+          "tpr": 0.1732
+        },
+        {
+          "fpr": 0.0891,
+          "tpr": 0.222
+        },
+        {
+          "fpr": 0.1079,
+          "tpr": 0.2754
+        },
+        {
+          "fpr": 0.1259,
+          "tpr": 0.3324
+        },
+        {
+          "fpr": 0.1454,
+          "tpr": 0.3666
+        },
+        {
+          "fpr": 0.1658,
+          "tpr": 0.4195
+        },
+        {
+          "fpr": 0.1845,
+          "tpr": 0.4625
+        },
+        {
+          "fpr": 0.2095,
+          "tpr": 0.491
+        },
+        {
+          "fpr": 0.2306,
+          "tpr": 0.534
+        },
+        {
+          "fpr": 0.2549,
+          "tpr": 0.5712
+        },
+        {
+          "fpr": 0.2768,
+          "tpr": 0.6008
+        },
+        {
+          "fpr": 0.301,
+          "tpr": 0.6293
+        },
+        {
+          "fpr": 0.3307,
+          "tpr": 0.6618
+        },
+        {
+          "fpr": 0.3542,
+          "tpr": 0.6996
+        },
+        {
+          "fpr": 0.38,
+          "tpr": 0.7321
+        },
+        {
+          "fpr": 0.4058,
+          "tpr": 0.7571
+        },
+        {
+          "fpr": 0.4355,
+          "tpr": 0.796
+        },
+        {
+          "fpr": 0.4824,
+          "tpr": 0.8158
+        },
+        {
+          "fpr": 0.5129,
+          "tpr": 0.8396
+        },
+        {
+          "fpr": 0.5465,
+          "tpr": 0.8617
+        },
+        {
+          "fpr": 0.5887,
+          "tpr": 0.8838
+        },
+        {
+          "fpr": 0.6263,
+          "tpr": 0.9006
+        },
+        {
+          "fpr": 0.6607,
+          "tpr": 0.9175
+        },
+        {
+          "fpr": 0.7138,
+          "tpr": 0.9396
+        },
+        {
+          "fpr": 0.7647,
+          "tpr": 0.9564
+        },
+        {
+          "fpr": 0.8272,
+          "tpr": 0.9721
+        },
+        {
+          "fpr": 0.8905,
+          "tpr": 0.9866
+        },
+        {
+          "fpr": 0.982,
+          "tpr": 0.9988
+        }
+      ]
+    },
+    "Random Forest Classifier": {
+      "accuracy": 0.6927,
+      "precision": 0.7133,
+      "recall": 0.7763,
+      "f1_score": 0.7435,
+      "roc_auc": 0.7279,
+      "confusion_matrix": [
+        [
+          742,
+          537
+        ],
+        [
+          385,
+          1336
+        ]
+      ],
+      "roc_curve_sample": [
+        {
+          "fpr": 0.0,
+          "tpr": 0.0
+        },
+        {
+          "fpr": 0.0203,
+          "tpr": 0.0331
+        },
+        {
+          "fpr": 0.0383,
+          "tpr": 0.0936
+        },
+        {
+          "fpr": 0.0563,
+          "tpr": 0.1493
+        },
+        {
+          "fpr": 0.0758,
+          "tpr": 0.2063
+        },
+        {
+          "fpr": 0.097,
+          "tpr": 0.2679
+        },
+        {
+          "fpr": 0.1188,
+          "tpr": 0.3225
+        },
+        {
+          "fpr": 0.1446,
+          "tpr": 0.3696
+        },
+        {
+          "fpr": 0.1658,
+          "tpr": 0.4259
+        },
+        {
+          "fpr": 0.1931,
+          "tpr": 0.4631
+        },
+        {
+          "fpr": 0.2166,
+          "tpr": 0.4974
+        },
+        {
+          "fpr": 0.2353,
+          "tpr": 0.5288
+        },
+        {
+          "fpr": 0.2565,
+          "tpr": 0.5671
+        },
+        {
+          "fpr": 0.2783,
+          "tpr": 0.6119
+        },
+        {
+          "fpr": 0.3026,
+          "tpr": 0.645
+        },
+        {
+          "fpr": 0.3299,
+          "tpr": 0.6705
+        },
+        {
+          "fpr": 0.3511,
+          "tpr": 0.7071
+        },
+        {
+          "fpr": 0.3808,
+          "tpr": 0.7391
+        },
+        {
+          "fpr": 0.405,
+          "tpr": 0.7687
+        },
+        {
+          "fpr": 0.448,
+          "tpr": 0.7937
+        },
+        {
+          "fpr": 0.4769,
+          "tpr": 0.8222
+        },
+        {
+          "fpr": 0.509,
+          "tpr": 0.8454
+        },
+        {
+          "fpr": 0.5403,
+          "tpr": 0.8652
+        },
+        {
+          "fpr": 0.5754,
+          "tpr": 0.8838
+        },
+        {
+          "fpr": 0.6153,
+          "tpr": 0.903
+        },
+        {
+          "fpr": 0.6638,
+          "tpr": 0.9192
+        },
+        {
+          "fpr": 0.7123,
+          "tpr": 0.9355
+        },
+        {
+          "fpr": 0.7506,
+          "tpr": 0.9518
+        },
+        {
+          "fpr": 0.7998,
+          "tpr": 0.9646
+        },
+        {
+          "fpr": 0.8608,
+          "tpr": 0.9785
+        },
+        {
+          "fpr": 0.9429,
+          "tpr": 0.9936
+        }
+      ]
+    },
+    "Gradient Boosting Classifier": {
+      "accuracy": 0.69,
+      "precision": 0.6881,
+      "recall": 0.8408,
+      "f1_score": 0.7568,
+      "roc_auc": 0.724,
+      "confusion_matrix": [
+        [
+          623,
+          656
+        ],
+        [
+          274,
+          1447
+        ]
+      ],
+      "roc_curve_sample": [
+        {
+          "fpr": 0.0,
+          "tpr": 0.0
+        },
+        {
+          "fpr": 0.0195,
+          "tpr": 0.0337
+        },
+        {
+          "fpr": 0.0383,
+          "tpr": 0.0895
+        },
+        {
+          "fpr": 0.0579,
+          "tpr": 0.1412
+        },
+        {
+          "fpr": 0.0758,
+          "tpr": 0.183
+        },
+        {
+          "fpr": 0.0938,
+          "tpr": 0.2266
+        },
+        {
+          "fpr": 0.1126,
+          "tpr": 0.2708
+        },
+        {
+          "fpr": 0.1337,
+          "tpr": 0.3289
+        },
+        {
+          "fpr": 0.1548,
+          "tpr": 0.3777
+        },
+        {
+          "fpr": 0.1728,
+          "tpr": 0.4178
+        },
+        {
+          "fpr": 0.1955,
+          "tpr": 0.4654
+        },
+        {
+          "fpr": 0.215,
+          "tpr": 0.5096
+        },
+        {
+          "fpr": 0.2408,
+          "tpr": 0.5613
+        },
+        {
+          "fpr": 0.2658,
+          "tpr": 0.5938
+        },
+        {
+          "fpr": 0.2901,
+          "tpr": 0.6275
+        },
+        {
+          "fpr": 0.319,
+          "tpr": 0.6653
+        },
+        {
+          "fpr": 0.3471,
+          "tpr": 0.6926
+        },
+        {
+          "fpr": 0.3737,
+          "tpr": 0.7223
+        },
+        {
+          "fpr": 0.3933,
+          "tpr": 0.7536
+        },
+        {
+          "fpr": 0.43,
+          "tpr": 0.7792
+        },
+        {
+          "fpr": 0.4566,
+          "tpr": 0.8083
+        },
+        {
+          "fpr": 0.4934,
+          "tpr": 0.8268
+        },
+        {
+          "fpr": 0.5192,
+          "tpr": 0.8478
+        },
+        {
+          "fpr": 0.5489,
+          "tpr": 0.8635
+        },
+        {
+          "fpr": 0.5825,
+          "tpr": 0.8838
+        },
+        {
+          "fpr": 0.6357,
+          "tpr": 0.903
+        },
+        {
+          "fpr": 0.6794,
+          "tpr": 0.9262
+        },
+        {
+          "fpr": 0.7381,
+          "tpr": 0.9454
+        },
+        {
+          "fpr": 0.8053,
+          "tpr": 0.9646
+        },
+        {
+          "fpr": 0.8765,
+          "tpr": 0.9802
+        },
+        {
+          "fpr": 0.9507,
+          "tpr": 0.9965
+        }
+      ]
+    }
+  },
+  "selected_model_metrics": {
+    "accuracy": 0.6643,
+    "precision": 0.7327,
+    "recall": 0.6531,
+    "f1_score": 0.6906,
+    "roc_auc": 0.7257,
+    "confusion_matrix": [
+      [
+        869,
+        410
+      ],
+      [
+        597,
+        1124
+      ]
+    ],
+    "roc_curve_sample": [
+      {
+        "fpr": 0.0,
+        "tpr": 0.0
+      },
+      {
+        "fpr": 0.0203,
+        "tpr": 0.0604
+      },
+      {
+        "fpr": 0.0453,
+        "tpr": 0.1156
+      },
+      {
+        "fpr": 0.0672,
+        "tpr": 0.1732
+      },
+      {
+        "fpr": 0.0891,
+        "tpr": 0.222
+      },
+      {
+        "fpr": 0.1079,
+        "tpr": 0.2754
+      },
+      {
+        "fpr": 0.1259,
+        "tpr": 0.3324
+      },
+      {
+        "fpr": 0.1454,
+        "tpr": 0.3666
+      },
+      {
+        "fpr": 0.1658,
+        "tpr": 0.4195
+      },
+      {
+        "fpr": 0.1845,
+        "tpr": 0.4625
+      },
+      {
+        "fpr": 0.2095,
+        "tpr": 0.491
+      },
+      {
+        "fpr": 0.2306,
+        "tpr": 0.534
+      },
+      {
+        "fpr": 0.2549,
+        "tpr": 0.5712
+      },
+      {
+        "fpr": 0.2768,
+        "tpr": 0.6008
+      },
+      {
+        "fpr": 0.301,
+        "tpr": 0.6293
+      },
+      {
+        "fpr": 0.3307,
+        "tpr": 0.6618
+      },
+      {
+        "fpr": 0.3542,
+        "tpr": 0.6996
+      },
+      {
+        "fpr": 0.38,
+        "tpr": 0.7321
+      },
+      {
+        "fpr": 0.4058,
+        "tpr": 0.7571
+      },
+      {
+        "fpr": 0.4355,
+        "tpr": 0.796
+      },
+      {
+        "fpr": 0.4824,
+        "tpr": 0.8158
+      },
+      {
+        "fpr": 0.5129,
+        "tpr": 0.8396
+      },
+      {
+        "fpr": 0.5465,
+        "tpr": 0.8617
+      },
+      {
+        "fpr": 0.5887,
+        "tpr": 0.8838
+      },
+      {
+        "fpr": 0.6263,
+        "tpr": 0.9006
+      },
+      {
+        "fpr": 0.6607,
+        "tpr": 0.9175
+      },
+      {
+        "fpr": 0.7138,
+        "tpr": 0.9396
+      },
+      {
+        "fpr": 0.7647,
+        "tpr": 0.9564
+      },
+      {
+        "fpr": 0.8272,
+        "tpr": 0.9721
+      },
+      {
+        "fpr": 0.8905,
+        "tpr": 0.9866
+      },
+      {
+        "fpr": 0.982,
+        "tpr": 0.9988
+      }
+    ]
+  },
+  "baselines": {
+    "Always predict cash-out (trivial)": {
+      "accuracy": 0.5737,
+      "precision": 0.5737,
+      "recall": 1.0,
+      "f1_score": 0.7291,
+      "roc_auc": 0.5
+    }
+  },
+  "top_feature_importances": [
+    {
+      "feature": "area_atm_density",
+      "importance": 0.1489,
+      "percentage": 14.89
+    },
+    {
+      "feature": "transaction_amount_bucket_CRITICAL_ABOVE_200K",
+      "importance": 0.0978,
+      "percentage": 9.78
+    },
+    {
+      "feature": "area_baseline_risk_score",
+      "importance": 0.0759,
+      "percentage": 7.59
+    },
+    {
+      "feature": "is_night_window",
+      "importance": 0.0724,
+      "percentage": 7.24
+    },
+    {
+      "feature": "is_weekend",
+      "importance": 0.0694,
+      "percentage": 6.94
+    },
+    {
+      "feature": "transaction_type_UPI_FRAUD",
+      "importance": 0.0578,
+      "percentage": 5.78
+    },
+    {
+      "feature": "time_to_report_mins",
+      "importance": 0.054,
+      "percentage": 5.4
+    },
+    {
+      "feature": "cos_hour",
+      "importance": 0.0472,
+      "percentage": 4.72
+    },
+    {
+      "feature": "complaint_category_INVESTMENT_MULE_SCAM",
+      "importance": 0.0406,
+      "percentage": 4.06
+    },
+    {
+      "feature": "transaction_amount_bucket_MID_10K_TO_50K",
+      "importance": 0.0388,
+      "percentage": 3.88
+    },
+    {
+      "feature": "transaction_type_NET_BANKING_PHISHING",
+      "importance": 0.035,
+      "percentage": 3.5
+    },
+    {
+      "feature": "transaction_amount_bucket_LOW_UNDER_10K",
+      "importance": 0.0335,
+      "percentage": 3.35
+    }
+  ],
+  "all_feature_names": [
+    "previous_incident_count",
+    "area_atm_density",
+    "time_to_report_mins",
+    "transaction_amount",
+    "sin_hour",
+    "cos_hour",
+    "sin_day",
+    "cos_day",
+    "is_night_window",
+    "is_weekend",
+    "area_baseline_risk_score",
+    "transaction_type_AEPS_SPOOF",
+    "transaction_type_CARD_SKIMMING",
+    "transaction_type_NET_BANKING_PHISHING",
+    "transaction_type_SIM_CLONE_FRAUD",
+    "transaction_type_UPI_FRAUD",
+    "complaint_category_INVESTMENT_MULE_SCAM",
+    "complaint_category_JOB_OFFER_FRAUD",
+    "complaint_category_KYC_EXPIRY_SPOOF",
+    "complaint_category_PHISHING_PORTAL",
+    "complaint_category_SEXTORTION_BLACKMAIL",
+    "transaction_amount_bucket_CRITICAL_ABOVE_200K",
+    "transaction_amount_bucket_HIGH_50K_TO_200K",
+    "transaction_amount_bucket_LOW_UNDER_10K",
+    "transaction_amount_bucket_MID_10K_TO_50K"
+  ],
+  "feature_baselines": {
+    "previous_incident_count": 8.0,
+    "area_atm_density": 37.0,
+    "time_to_report_mins": 132.0,
+    "transaction_amount": 10800.0,
+    "sin_hour": -0.2588,
+    "cos_hour": -0.2588,
+    "sin_day": 0.0,
+    "cos_day": -0.2225,
+    "is_night_window": 0.0,
+    "is_weekend": 0.0,
+    "area_baseline_risk_score": 0.568,
+    "transaction_type": "UPI_FRAUD",
+    "complaint_category": "INVESTMENT_MULE_SCAM",
+    "transaction_amount_bucket": "MID_10K_TO_50K"
+  },
+  "excluded_features": [
+    "label_generation_prob",
+    "local_risk_score",
+    "target_cash_withdrawal_event"
+  ],
+  "leakage_note": "label_generation_prob is the quantity the synthetic label was drawn from. It is excluded from the feature matrix and the exclusion is asserted at train time. Reported scores are therefore lower than a leaking model's, and reflect signal the model can actually use at request time.",
+  "disclaimer": "Predictions are probabilistic decision-support estimates. Not deterministic proof of guilt."
+}

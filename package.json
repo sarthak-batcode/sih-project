@@ -1,0 +1,22 @@
+{
+  "name": "sih26184-cybercrime-intelligence",
+  "version": "1.0.0",
+  "description": "Smart India Hackathon 2026 - Cybercrime Predictive Intelligence & Cash-Withdrawal Risk Dashboard",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "backend": ".venv/Scripts/python -m uvicorn backend.app.main:app --reload --port 8000",
+    "generate-data": ".venv/Scripts/python ml/data_generator/generate_synthetic_data.py",
+    "train-ml": ".venv/Scripts/python ml/pipeline/train.py",
+    "test": ".venv/Scripts/pytest tests/"
+  },
+  "keywords": [
+    "sih26184",
+    "cybercrime-intelligence",
+    "predictive-ml",
+    "fraud-risk-dashboard",
+    "smart-india-hackathon"
+  ],
+  "author": "SIH26184 Engineering Team",
+  "license": "MIT"
+}
