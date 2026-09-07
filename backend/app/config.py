@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     # CORS. No "*" here: with allow_credentials=True a wildcard origin is
     # rejected by every browser anyway, so it bought nothing and only looked
     # permissive. Add deployment origins explicitly.
-    BACKEND_CORS_ORIGINS = [
+   BACKEND_CORS_ORIGINS: List[str] = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:4173",
