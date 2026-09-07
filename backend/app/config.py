@@ -34,14 +34,15 @@ class Settings(BaseSettings):
     # CORS. No "*" here: with allow_credentials=True a wildcard origin is
     # rejected by every browser anyway, so it bought nothing and only looked
     # permissive. Add deployment origins explicitly.
-    BACKEND_CORS_ORIGINS: List[str] = [
-        "http://localhost:5173",   # vite dev
-        "http://127.0.0.1:5173",
-        "http://localhost:4173",   # vite preview (production build)
-        "http://127.0.0.1:4173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ]
+    BACKEND_CORS_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:4173",
+    "http://127.0.0.1:4173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://sih-project-55in.vercel.app",
+]
 
     # Default risk cut-offs. Operators can change these at runtime through
     # PATCH /api/v1/settings; these are the values a fresh database starts with.
