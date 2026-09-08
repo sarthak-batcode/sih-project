@@ -24,9 +24,9 @@ The per-prediction attribution uses the same counterfactual ablation as `ml/pipe
 
 ## What it leaves out
 
-Authentication, RBAC, the audit ledger, the SQLite database, operator-configurable thresholds
-and the governance screens are all part of the full stack and are not reproduced here. There is
-no login because there is nothing to protect: the data is synthetic and the file is read-only.
+The audit ledger, the SQLite database, operator-configurable thresholds and the governance
+screens are all part of the full stack and are not reproduced here. Like the full stack, this
+file has no login — the data is synthetic and the page is read-only.
 
 ## Rebuilding
 

@@ -9,14 +9,68 @@ import { useSearchParams } from 'react-router-dom';
 // Center of India coordinates for map default
 const DEFAULT_CENTER: [number, number] = [21.5, 78.5];
 
-// Helper to pan to targeted area
-const MapController: React.FC<{ targetPos: [number, number] | null }> = ({ targetPos }) => {
+// Default zoom: the whole grid has to be visible, or there is nothing to click.
+const DEFAULT_ZOOM = 5;
+// Zoom used when arriving with ?focus= from another screen. 11 was street level,
+// which put all 99 other zones outside the viewport.
+const FOCUS_ZOOM = 8;
+
+/**
+ * Re-measures the map once the layout has settled.
+ *
+ * Leaflet measures its container exactly once, when the map is created. This
+ * map lives inside a CSS grid cell whose height is not resolved at that moment,
+ * so Leaflet computed its projection origin against the wrong size and placed
+ * every marker thousands of pixels below the visible area — 100 markers in the
+ * DOM, none on screen, nothing to click.
+ *
+ * invalidateSize() re-reads the container and recomputes the origin. Also bound
+ * to resize, since the same miscalculation happens when the window changes.
+ */
+const MapSizeFix: React.FC = () => {
   const map = useMap();
   useEffect(() => {
-    if (targetPos) {
-      map.flyTo(targetPos, 11, { duration: 1.5 });
+    const fix = () => map.invalidateSize();
+    const raf = requestAnimationFrame(fix);
+    const settle = setTimeout(fix, 250);   // covers fonts/scrollbars landing late
+    window.addEventListener('resize', fix);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(settle);
+      window.removeEventListener('resize', fix);
+    };
+  }, [map]);
+  return null;
+};
+
+/**
+ * Moves the map when the selection changes.
+ *
+ * Keyed on the area ID, not on a coordinate array. The caller used to pass
+ * `targetPos={selected ? [lat, lon] : null}`, which builds a NEW array on every
+ * render — so this effect's dependency changed constantly and the map re-flew
+ * on unrelated re-renders, including every keystroke in the search box.
+ *
+ * A click on a marker the user can already see only pans; it does not zoom in
+ * on them. Arriving from another screen with ?focus= zooms, because there the
+ * user has not seen the map yet.
+ */
+const MapController: React.FC<{
+  areaId: string | null;
+  lat?: number;
+  lon?: number;
+  zoomIn: boolean;
+}> = ({ areaId, lat, lon, zoomIn }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (areaId == null || lat == null || lon == null) return;
+    if (zoomIn) {
+      map.flyTo([lat, lon], Math.max(map.getZoom(), FOCUS_ZOOM), { duration: 1.2 });
+    } else {
+      map.panTo([lat, lon], { duration: 0.6 });
     }
-  }, [targetPos, map]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [areaId, map]);
   return null;
 };
 
@@ -27,6 +81,9 @@ export const RiskMapPage: React.FC = () => {
   const [filterRisk, setFilterRisk] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchParams] = useSearchParams();
+  // true only when the selection came from a ?focus= link, which is the one
+  // case where changing the zoom level is helpful rather than disorienting.
+  const [cameFromFocus, setCameFromFocus] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchAreas = async () => {
@@ -35,13 +92,19 @@ export const RiskMapPage: React.FC = () => {
         const data = await apiService.getAreas();
         setAreas(data);
 
-        // Check if navigated with focus query
+        // Only pre-select when another screen asked for a specific zone.
+        //
+        // This used to fall back to `setSelectedArea(data[0])`, which made the
+        // map fly to that zone at street zoom the moment the page opened — so
+        // all 100 markers were in the DOM and none were on screen, and there
+        // was nothing left to click.
         const focusId = searchParams.get('focus');
         if (focusId) {
           const match = data.find((a) => a.area_id === focusId);
-          if (match) setSelectedArea(match);
-        } else if (data.length > 0) {
-          setSelectedArea(data[0]);
+          if (match) {
+            setSelectedArea(match);
+            setCameFromFocus(true);
+          }
         }
       } catch (err) {
         console.error('Error loading areas:', err);
@@ -120,11 +183,17 @@ export const RiskMapPage: React.FC = () => {
         <div className="lg:col-span-8 cyber-card border border-line rounded-xl overflow-hidden relative shadow-2xl">
           <MapContainer
             center={DEFAULT_CENTER}
-            zoom={5}
+            zoom={DEFAULT_ZOOM}
             style={{ width: '100%', height: '100%' }}
             className="z-0"
           >
-            <MapController targetPos={selectedArea ? [selectedArea.latitude, selectedArea.longitude] : null} />
+            <MapSizeFix />
+            <MapController
+              areaId={selectedArea?.area_id ?? null}
+              lat={selectedArea?.latitude}
+              lon={selectedArea?.longitude}
+              zoomIn={cameFromFocus}
+            />
 
             <TileLayer
               attribution='&copy; <a href="https://carto.com/">CARTO</a>'
@@ -143,7 +212,7 @@ export const RiskMapPage: React.FC = () => {
                   weight: 2,
                 }}
                 eventHandlers={{
-                  click: () => setSelectedArea(area),
+                  click: () => { setCameFromFocus(false); setSelectedArea(area); },
                 }}
               >
                 <Popup>

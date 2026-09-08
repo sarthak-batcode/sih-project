@@ -4,10 +4,9 @@ from backend.app.config import settings
 from backend.app.database import engine, Base
 
 # Import ORM models to register metadata
-from backend.app.models import user, area, complaint, prediction, audit_log, system_setting
+from backend.app.models import area, complaint, prediction, audit_log, system_setting
 
 # Import Routers
-from backend.app.api.v1.auth import router as auth_router
 from backend.app.api.v1.dashboard import router as dashboard_router
 from backend.app.api.v1.areas import router as areas_router
 from backend.app.api.v1.predictions import router as predictions_router
@@ -15,13 +14,6 @@ from backend.app.api.v1.analytics import router as analytics_router
 from backend.app.api.v1.model_metrics import router as model_router
 from backend.app.api.v1.audit import router as audit_router
 from backend.app.api.v1.settings import router as settings_router
-
-# Refuse to run in production with the committed development signing key.
-if settings.ENVIRONMENT == "production" and settings.SECRET_KEY.startswith("dev-only"):
-    raise RuntimeError(
-        "SECRET_KEY is still the development default. Set SECRET_KEY in .env "
-        "before running with ENVIRONMENT=production."
-    )
 
 # Initialize database schema tables on startup
 Base.metadata.create_all(bind=engine)
@@ -44,7 +36,6 @@ app.add_middleware(
 )
 
 # Register API v1 Routers
-app.include_router(auth_router, prefix=settings.API_V1_STR)
 app.include_router(dashboard_router, prefix=settings.API_V1_STR)
 app.include_router(areas_router, prefix=settings.API_V1_STR)
 app.include_router(predictions_router, prefix=settings.API_V1_STR)

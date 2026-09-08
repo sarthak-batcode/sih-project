@@ -21,21 +21,6 @@ client = TestClient(app)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-@pytest.fixture
-def admin_token():
-    res = client.post("/api/v1/auth/login", json={
-        "email": "admin@cyberintel.gov.in", "password": "Admin@SIH2026!"})
-    assert res.status_code == 200, "seed the database first: python database/seed_data.py"
-    return res.json()["access_token"]
-
-
-@pytest.fixture
-def analyst_token():
-    res = client.post("/api/v1/auth/login", json={
-        "email": "analyst@cyberintel.gov.in", "password": "Analyst@2026!"})
-    assert res.status_code == 200
-    return res.json()["access_token"]
-
 
 # ---------------------------------------------------------------- ML leakage
 
@@ -159,79 +144,73 @@ def test_attribution_is_model_derived():
         assert f["direction"] in {"increases", "reduces", "neutral"}
 
 
-# ----------------------------------------------------------------- security
+# ------------------------------------------------------------ public access
 
 @pytest.mark.parametrize("path", [
     "/api/v1/dashboard/summary",
     "/api/v1/areas",
     "/api/v1/predict/batch",
     "/api/v1/analytics/trends",
+    "/api/v1/model/metrics",
     "/api/v1/audit/logs",
     "/api/v1/settings",
-    "/api/v1/auth/me",
 ])
-def test_protected_endpoints_reject_anonymous_requests(path):
+def test_every_endpoint_is_publicly_reachable(path):
     """
-    get_current_user() used to return the demo admin when the Authorization
-    header was missing, so a bare curl had full admin rights on every endpoint.
+    Authentication was removed: the deployment is public-access. This is the
+    inverse of the test that used to live here (which asserted 401 on each of
+    these paths), and it fails if an auth dependency is ever reintroduced by
+    accident.
     """
-    assert client.get(path).status_code == 401, f"{path} answered an anonymous request"
+    res = client.get(path)
+    assert res.status_code == 200, f"{path} returned {res.status_code} without credentials"
 
 
-def test_bad_password_is_rejected():
-    res = client.post("/api/v1/auth/login", json={
-        "email": "admin@cyberintel.gov.in", "password": "definitely-wrong"})
-    assert res.status_code == 401
-
-
-def test_analyst_cannot_change_risk_thresholds(analyst_token):
-    res = client.patch("/api/v1/settings", json={"threshold_high": 0.5},
-                       headers={"Authorization": f"Bearer {analyst_token}"})
-    assert res.status_code == 403
+def test_no_auth_routes_remain():
+    paths = {p for p in client.get("/openapi.json").json()["paths"]}
+    offenders = [p for p in paths if "/auth" in p or "login" in p.lower()]
+    assert not offenders, f"auth routes still registered: {offenders}"
 
 
 # ----------------------------------------------------------------- settings
 
-def test_thresholds_must_stay_ordered(admin_token):
-    h = {"Authorization": f"Bearer {admin_token}"}
-    res = client.patch("/api/v1/settings", json={"threshold_high": 0.95}, headers=h)
+def test_thresholds_must_stay_ordered():
+    res = client.patch("/api/v1/settings", json={"threshold_high": 0.95})
     assert res.status_code == 400
     assert "medium < high < critical" in res.json()["detail"]
 
 
-def test_threshold_change_reclassifies_zones_and_is_audited(admin_token):
+def test_threshold_change_reclassifies_zones_and_is_audited():
     """The Settings sliders used to be local component state that saved nowhere."""
-    h = {"Authorization": f"Bearer {admin_token}"}
-    original = client.get("/api/v1/settings", headers=h).json()
+    original = client.get("/api/v1/settings").json()
     try:
-        before = client.get("/api/v1/predict/batch?hour=23", headers=h).json()
+        before = client.get("/api/v1/predict/batch?hour=23").json()
         client.patch("/api/v1/settings",
                      json={"threshold_critical": 0.72, "threshold_high": 0.55},
-                     headers=h)
-        after = client.get("/api/v1/predict/batch?hour=23", headers=h).json()
+                     )
+        after = client.get("/api/v1/predict/batch?hour=23").json()
         assert after["critical_risk_count"] > before["critical_risk_count"]
 
-        logs = client.get("/api/v1/audit/logs?action=THRESHOLD", headers=h).json()
+        logs = client.get("/api/v1/audit/logs?action=THRESHOLD").json()
         assert any(l["action"] == "RISK_THRESHOLDS_UPDATED" for l in logs)
     finally:
         client.patch("/api/v1/settings", json={
             "threshold_critical": original["threshold_critical"],
             "threshold_high": original["threshold_high"],
             "threshold_medium": original["threshold_medium"],
-        }, headers=h)
+        })
 
 
 # ------------------------------------------------------------- data honesty
 
-def test_dashboard_counts_match_the_areas_file(admin_token):
+def test_dashboard_counts_match_the_areas_file():
     """
     /dashboard/summary substituted invented counts (32 HIGH) when the database
     was empty, while the risk map read the real file (4 HIGH). The two screens
     contradicted each other in the same demo.
     """
-    h = {"Authorization": f"Bearer {admin_token}"}
-    summary = client.get("/api/v1/dashboard/summary", headers=h).json()
-    areas = client.get("/api/v1/areas", headers=h).json()
+    summary = client.get("/api/v1/dashboard/summary").json()
+    areas = client.get("/api/v1/areas").json()
 
     counted = {"HIGH": 0, "MEDIUM": 0, "LOW": 0}
     for a in areas:
@@ -242,21 +221,19 @@ def test_dashboard_counts_match_the_areas_file(admin_token):
     assert summary["low_risk_areas_count"] == counted["LOW"]
 
 
-def test_alerts_are_generated_not_hardcoded(admin_token):
+def test_alerts_are_generated_not_hardcoded():
     """Three fixed dicts with timestamps like "10 mins ago" that never changed."""
-    h = {"Authorization": f"Bearer {admin_token}"}
-    alerts = client.get("/api/v1/dashboard/summary", headers=h).json()["recent_alerts"]
+    alerts = client.get("/api/v1/dashboard/summary").json()["recent_alerts"]
     for a in alerts:
         assert "mins ago" not in a["timestamp"]
         assert a["risk_score"] > 0
         assert a["area_id"].startswith("AREA-")
 
 
-def test_analytics_aggregates_come_from_the_database(admin_token):
+def test_analytics_aggregates_come_from_the_database():
     """regional_risk_matrix and amount_bucket_distribution were Python literals."""
-    h = {"Authorization": f"Bearer {admin_token}"}
-    trends = client.get("/api/v1/analytics/trends", headers=h).json()
-    areas = client.get("/api/v1/areas", headers=h).json()
+    trends = client.get("/api/v1/analytics/trends").json()
+    areas = client.get("/api/v1/areas").json()
 
     regions_in_data = {a["region"] for a in areas}
     regions_reported = {r["region"] for r in trends["regional_risk_matrix"]}

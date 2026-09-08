@@ -10,8 +10,6 @@ from sqlalchemy import func
 from backend.app.database import get_db
 from backend.app.models.area import Area
 from backend.app.models.complaint import Complaint
-from backend.app.models.user import User
-from backend.app.core.rbac import get_current_user
 from backend.app.api.v1.settings import get_settings_row, get_thresholds
 from backend.app.schemas.dashboard_schema import DashboardSummaryResponse, AlertItem
 from backend.app.config import settings
@@ -79,7 +77,7 @@ def _build_live_alerts(db: Session, limit: int = 4) -> List[AlertItem]:
             transaction_type="UPI_FRAUD",
             complaint_category="INVESTMENT_MULE_SCAM",
             area_baseline_risk_score=area.baseline_risk_score,
-            thresholds=thresholds,
+            thresholds=thresholds
         )
         top_factor = detail["contributing_factors"][0] if detail["contributing_factors"] else None
         scored.append(AlertItem(
@@ -96,14 +94,14 @@ def _build_live_alerts(db: Session, limit: int = 4) -> List[AlertItem]:
             ),
             risk_score=b["risk_score"],
             recommended_action=ACTION_BY_SEVERITY.get(
-                b["risk_level"], "Continue routine surveillance."),
+                b["risk_level"], "Continue routine surveillance.")
         ))
 
     return scored
 
 
 @router.get("/summary", response_model=DashboardSummaryResponse)
-def get_dashboard_summary(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def get_dashboard_summary(db: Session = Depends(get_db)):
     """
     National command metrics, risk distribution and the live alert feed.
 
@@ -117,7 +115,7 @@ def get_dashboard_summary(db: Session = Depends(get_db), current_user: User = De
     if total_areas == 0:
         raise HTTPException(
             status_code=409,
-            detail="Database not seeded. Run: python database/seed_data.py",
+            detail="Database not seeded. Run: python database/seed_data.py"
         )
 
     total_cash_outs = db.query(Complaint).filter(
@@ -199,5 +197,5 @@ def get_dashboard_summary(db: Session = Depends(get_db), current_user: User = De
         total_fraud_volume_inr=float(total_amount),
         top_high_risk_areas=top_areas_list,
         recent_alerts=alerts,
-        hourly_distribution=hourly_data,
+        hourly_distribution=hourly_data
     )

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {
   DashboardSummary, Area, PredictionResult, BatchPredictionResponse,
-  AuditLogItem, UserProfile, SystemSettings
+  AuditLogItem, SystemSettings
 } from '../types';
 
 // 127.0.0.1 rather than localhost: on machines where `localhost` resolves to
@@ -18,56 +18,18 @@ const apiClient = axios.create({
   },
 });
 
-// Interceptor to attach JWT token
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('sih_auth_token');
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => Promise.reject(error));
-
-// A 401 on any request means the stored token is gone or expired. Tell the
-// auth context to drop the session rather than leaving the UI half-signed-in
-// with screens that silently fail to load.
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const status = error?.response?.status;
-    const isLoginAttempt = error?.config?.url?.includes('/auth/login');
-    if (status === 401 && !isLoginAttempt) {
-      localStorage.removeItem('sih_auth_token');
-      localStorage.removeItem('sih_user');
-      window.dispatchEvent(new CustomEvent('sih:unauthorized'));
-    }
-    return Promise.reject(error);
-  }
-);
-
 /** Turns an axios failure into a message worth showing a user. */
 export const describeError = (err: any): string => {
   if (err?.response?.data?.detail) {
     const d = err.response.data.detail;
     return typeof d === 'string' ? d : JSON.stringify(d);
   }
-  if (err?.response?.status === 403) return 'Your role does not have access to this.';
   if (err?.code === 'ECONNABORTED') return 'The API did not respond in time.';
   if (!err?.response) return 'Cannot reach the API. Is the backend running on port 8000?';
   return 'Request failed. Please try again.';
 };
 
 export const apiService = {
-  // Auth
-  login: async (email: string, password: string) => {
-    const res = await apiClient.post('/auth/login', { email, password });
-    return res.data;
-  },
-
-  getMe: async (): Promise<UserProfile> => {
-    const res = await apiClient.get('/auth/me');
-    return res.data;
-  },
-
   // Dashboard
   getDashboardSummary: async (): Promise<DashboardSummary> => {
     const res = await apiClient.get('/dashboard/summary');

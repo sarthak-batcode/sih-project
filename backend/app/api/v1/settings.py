@@ -5,9 +5,7 @@ from sqlalchemy.orm import Session
 
 from backend.app.database import get_db
 from backend.app.models.system_setting import SystemSetting
-from backend.app.models.user import User
-from backend.app.core.rbac import get_current_user, require_roles
-from backend.app.core.audit_logger import log_audit_event
+from backend.app.core.audit_logger import log_audit_event, PUBLIC_ACTOR_EMAIL
 from backend.app.config import settings as app_settings
 
 router = APIRouter(prefix="/settings", tags=["System Controls"])
@@ -39,7 +37,7 @@ def get_settings_row(db: Session) -> SystemSetting:
             id=1,
             threshold_critical=app_settings.RISK_THRESHOLD_CRITICAL,
             threshold_high=app_settings.RISK_THRESHOLD_HIGH,
-            threshold_medium=app_settings.RISK_THRESHOLD_MEDIUM,
+            threshold_medium=app_settings.RISK_THRESHOLD_MEDIUM
         )
         db.add(row)
         db.commit()
@@ -65,12 +63,12 @@ def _serialise(row: SystemSetting) -> SettingsResponse:
         alerts_enabled=bool(row.alerts_enabled),
         alert_min_severity=row.alert_min_severity,
         updated_at=row.updated_at.strftime("%Y-%m-%d %H:%M:%S UTC") if row.updated_at else None,
-        updated_by=row.updated_by,
+        updated_by=row.updated_by
     )
 
 
 @router.get("", response_model=SettingsResponse)
-def read_settings(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def read_settings(db: Session = Depends(get_db)):
     """Returns the live risk cut-offs and alert configuration."""
     return _serialise(get_settings_row(db))
 
@@ -79,13 +77,15 @@ def read_settings(db: Session = Depends(get_db), current_user: User = Depends(ge
 def update_settings(
     payload: SettingsUpdate,
     request: Request,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(["admin"])),
+    db: Session = Depends(get_db)
 ):
     """
-    Updates the live risk cut-offs. Admin only, and every change is written to
-    the audit ledger with the previous and new values — changing how the system
-    classifies risk is exactly the kind of action an audit trail exists for.
+    Updates the live risk cut-offs.
+
+    Open to anyone, since the deployment is public-access. Every change is still
+    written to the audit ledger with its previous and new values — changing how
+    the system classifies risk is exactly the kind of action a trail exists for,
+    whether or not there is a named actor to attach to it.
     """
     row = get_settings_row(db)
     before = {
@@ -113,17 +113,15 @@ def update_settings(
             status_code=400,
             detail="Thresholds must increase: medium < high < critical. "
                    f"Got medium={row.threshold_medium}, high={row.threshold_high}, "
-                   f"critical={row.threshold_critical}.",
+                   f"critical={row.threshold_critical}."
         )
 
-    row.updated_by = current_user.email
+    row.updated_by = PUBLIC_ACTOR_EMAIL
     db.commit()
     db.refresh(row)
 
     log_audit_event(
         db=db,
-        actor_email=current_user.email,
-        actor_role=current_user.role,
         action="RISK_THRESHOLDS_UPDATED",
         resource="/settings",
         details={"before": before, "after": {
@@ -133,7 +131,7 @@ def update_settings(
             "alerts_enabled": bool(row.alerts_enabled),
             "alert_min_severity": row.alert_min_severity,
         }},
-        ip_address=request.client.host if request.client else "127.0.0.1",
+        ip_address=request.client.host if request.client else "127.0.0.1"
     )
 
     return _serialise(row)

@@ -10,7 +10,7 @@ class AuditLog(Base):
     timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False, index=True)
     actor_email = Column(String, nullable=False, index=True)
     actor_role = Column(String, nullable=False)
-    action = Column(String, nullable=False)  # LOGIN, PREDICTION_REQUEST, AREA_INSPECT, EXPORT_REPORT, etc.
+    action = Column(String, nullable=False)  # PREDICTION_GENERATED, RISK_THRESHOLDS_UPDATED, SYSTEM_INIT_SEED, etc.
     resource = Column(String, nullable=False)
     details = Column(Text, nullable=True)
     ip_address = Column(String, default="127.0.0.1")

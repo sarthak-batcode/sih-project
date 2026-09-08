@@ -213,16 +213,21 @@ select:focus,input:focus{outline:none;border-color:var(--accent)}
       <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px">
         <div>
           <h1 style="font-size:20px;font-weight:600">Risk map</h1>
-          <p class="sub">All 100 synthetic surveillance zones, coloured by predicted risk at the selected hour.</p>
+          <p class="sub">All 100 synthetic surveillance zones, coloured by predicted risk at the selected hour. Click one to inspect it.</p>
         </div>
         <div class="ctrl" style="min-width:230px">
           <label>Time of day <b id="hourLabel2">23:00</b></label>
           <input type="range" id="hourSlider2" min="0" max="23" value="23">
         </div>
       </div>
-      <div class="card mapwrap" style="margin-top:14px">
-        <div id="map"></div>
-        <div class="tip" id="tip"></div>
+      <div class="split" style="margin-top:14px;grid-template-columns:1.9fr 1fr">
+        <div class="card mapwrap">
+          <div id="map"></div>
+          <div class="tip" id="tip"></div>
+        </div>
+        <div class="card" id="zonePanel">
+          <p class="sub">Click any zone on the map to inspect it.</p>
+        </div>
       </div>
       <div class="legend" style="margin-top:2px">
         <span><i style="background:#34D399"></i>Low</span>
@@ -441,6 +446,46 @@ function attribute(row, prob){
 /*  RENDER                                                               */
 /* ===================================================================== */
 const $ = id => document.getElementById(id);
+const e_id = el => el.dataset.id;
+
+/** Renders the detail panel for one zone at the selected hour. */
+function selectZone(areaId, hour){
+  const a = DATA.areas.find(z => z.id === areaId);
+  if (!a) return;
+  document.querySelectorAll('.zone').forEach(c =>
+    c.setAttribute('stroke-width', c.dataset.id === areaId ? '3' : '1.4'));
+
+  const row = makeRow({hour, day_of_week:DOW, prev:Math.round(a.b*15), atm:a.atm,
+                       delay:120, amount:35000, baseline:a.b,
+                       type:'UPI_FRAUD', category:'INVESTMENT_MULE_SCAM'});
+  const s = score(row), lvl = levelOf(s);
+  const factors = attribute(row, s).slice(0, 4);
+
+  $('zonePanel').innerHTML = `
+    <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+      <span class="label">${a.id}</span>
+      <span class="badge ${lvl}">${lvl} ${(s*100).toFixed(0)}%</span>
+    </div>
+    <h3 style="margin-top:6px">${a.n}</h3>
+    <p class="sub">${a.d} · ${a.s}</p>
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:7px">
+      ${[['Zone type', a.z], ['ATM / POS terminals', a.atm],
+         ['Standing risk', a.b.toFixed(2)],
+         ['Predicted at ' + pad(hour) + ':00', (s*100).toFixed(1) + '%'],
+         ['Patrol window', pad(hour) + ':00 – ' + pad((hour+3)%24) + ':00 IST']]
+        .map(([k,v]) => `<div style="display:flex;justify-content:space-between;gap:10px;font-size:12.5px">
+             <span style="color:var(--text-3)">${k}</span>
+             <span class="mono" style="color:var(--text)">${v}</span></div>`).join('')}
+    </div>
+    <div class="label" style="margin-top:14px">What moved this estimate</div>
+    <div class="factors">
+      ${factors.map(f => `<div class="factor">
+          <span class="fname">${f.label}</span>
+          <span class="fval ${f.delta>0?'up':'down'}">${f.delta>0?'+':''}${(f.delta*100).toFixed(1)}%</span>
+        </div>`).join('')}
+    </div>
+    <p class="sub" style="margin-top:12px;font-size:11px">${ACTION[lvl]}</p>`;
+}
 const pad = n => String(n).padStart(2, '0');
 const DOW = 5;                                  // Saturday, for the overview
 
@@ -558,7 +603,12 @@ function renderMap(hour){
   const px = lo => pad_ + (lo - minLo) / (maxLo - minLo) * (W - 2*pad_);
   const py = la => H - pad_ - (la - minLa) / (maxLa - minLa) * (H - 2*pad_);
 
-  const circles = scored.map(z => {
+  // SVG paints in document order, so the LAST circle drawn sits on top.
+  // `scored` is highest-risk first, which buried every critical zone under the
+  // low-risk ones drawn after it — the markers that matter most were the ones
+  // you could not click. Reversed so high risk is painted last, and therefore
+  // on top and hit-testable.
+  const circles = [...scored].reverse().map(z => {
     const r = 4 + Math.sqrt(z.a.atm) * 0.9;
     return `<circle class="zone" data-id="${z.a.id}" data-name="${z.a.n.replace(/"/g,'&quot;')}"
       data-score="${(z.s*100).toFixed(1)}" data-level="${z.level}" data-atm="${z.a.atm}"
@@ -581,6 +631,8 @@ function renderMap(hour){
   </svg>`;
 
   const tip = $('tip');
+  // remembered across re-renders so the hour slider rescores the open zone
+  const previously = window.__selectedZone;
   $('map').querySelectorAll('.zone').forEach(c => {
     c.addEventListener('mouseenter', e => {
       const d = e.target.dataset;
@@ -594,7 +646,11 @@ function renderMap(hour){
       tip.style.top = (e.clientY - b.top + 12) + 'px';
     });
     c.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+    c.addEventListener('click', () => { window.__selectedZone = e_id(c); selectZone(e_id(c), hour); });
   });
+  // keep the open zone selected (and rescored) when the hour slider moves
+  if (previously) selectZone(previously, hour);
+  else $('zonePanel').innerHTML = '<p class="sub">Click any zone on the map to inspect it.</p>';
 }
 
 function renderPredict(){

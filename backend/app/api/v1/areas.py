@@ -6,8 +6,6 @@ from sqlalchemy.orm import Session
 from backend.app.database import get_db
 from backend.app.models.area import Area
 from backend.app.models.complaint import Complaint
-from backend.app.core.rbac import get_current_user
-from backend.app.models.user import User
 from backend.app.schemas.area_schema import AreaSchema, AreaDetailResponse
 
 router = APIRouter(prefix="/areas", tags=["Surveillance Areas"])
@@ -16,8 +14,7 @@ router = APIRouter(prefix="/areas", tags=["Surveillance Areas"])
 def list_areas(
     risk_category: Optional[str] = Query(None, description="Filter by HIGH, MEDIUM, LOW"),
     state: Optional[str] = Query(None, description="Filter by state"),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     """Retrieves all 100 surveillance grid areas with coordinates and threat scores."""
     query = db.query(Area)
@@ -41,7 +38,7 @@ def list_areas(
     return areas
 
 @router.get("/{area_id}", response_model=AreaDetailResponse)
-def get_area_detail(area_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def get_area_detail(area_id: str, db: Session = Depends(get_db)):
     """Fetches deep intelligence profile for a specific surveillance area."""
     area = db.query(Area).filter(Area.area_id == area_id).first()
     if not area:

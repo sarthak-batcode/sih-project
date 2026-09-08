@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import List, Literal
+from typing import List
 
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -10,17 +10,12 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=True,
         env_file=".env",
-        extra="ignore",  # was "allow" — "ignore" catches typo'd env vars instead of silently accepting them
+        extra="ignore"
     )
 
     PROJECT_NAME: str = "Cybercrime Predictive Intelligence & Cash-Withdrawal Risk Dashboard"
-    ENVIRONMENT: Literal["development", "staging", "production"] = "development"
+    ENVIRONMENT: str = "development"
     API_V1_STR: str = "/api/v1"
-
-    # JWT
-    SECRET_KEY: str = "dev-only-insecure-key-set-SECRET_KEY-in-dotenv"
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 8
 
     # Database
     DATABASE_URL: str = "sqlite:///./cyber_intelligence.db"
@@ -52,16 +47,7 @@ class Settings(BaseSettings):
     RISK_THRESHOLD_MEDIUM: float = 0.40
 
     @model_validator(mode="after")
-    def _check_secret_key_in_prod(self) -> "Settings":
-        if self.ENVIRONMENT == "production" and "dev-only" in self.SECRET_KEY:
-            raise ValueError(
-                "SECRET_KEY is still set to the insecure default. "
-                "Set a real SECRET_KEY in your .env before running in production."
-            )
-        return self
-
-    @model_validator(mode="after")
-    def _ensure_model_dir_exists(self) -> "Settings":
+    def ensure_model_dir_exists(self):
         Path(self.MODEL_DIR).mkdir(parents=True, exist_ok=True)
         return self
 

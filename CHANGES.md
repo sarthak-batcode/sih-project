@@ -1,5 +1,11 @@
 # What changed, and why
 
+> **Later change — authentication removed.** Section 7 below describes fixing the broken
+> authentication system. That system has since been removed entirely: this build is public-access
+> by design, so judges and reviewers can reach every screen without credentials. Section 7 is kept
+> as the record of what was wrong with the auth layer while it existed. See `AUTH_REMOVAL.md` for
+> what was taken out.
+
 A review of the September 2026 codebase found defects at three levels: the model was learning
 from the answer key, the API had no working authentication, and several screens showed numbers
 that were not computed from anything. This is the full list, with the reasoning, so the changes

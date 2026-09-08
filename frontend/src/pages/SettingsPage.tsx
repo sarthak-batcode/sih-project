@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Sliders, Bell, Save, Check, Lock, RefreshCw } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { Sliders, Bell, Save, Check, RefreshCw } from 'lucide-react';
 import { apiService, describeError } from '../services/api';
 import { SystemSettings } from '../types';
 
@@ -13,11 +12,11 @@ import { SystemSettings } from '../types';
  * `/api/v1/settings`, the prediction endpoints read the same row on every
  * request, and each change is written to the audit ledger with its before and
  * after values.
+ *
+ * The site is public-access, so these controls are open to anyone who opens the
+ * page — there is no role to check.
  */
 export const SettingsPage: React.FC = () => {
-  const { user } = useAuth();
-  const isAdmin = user?.role === 'admin';
-
   const [settings, setSettings] = useState<SystemSettings | null>(null);
   const [draft, setDraft] = useState<SystemSettings | null>(null);
   const [loading, setLoading] = useState(true);
@@ -103,9 +102,8 @@ export const SettingsPage: React.FC = () => {
         max={max}
         step={0.01}
         value={value}
-        disabled={!isAdmin}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="h-1.5 w-full cursor-pointer rounded bg-ink-300 disabled:cursor-not-allowed disabled:opacity-50"
+        className="h-1.5 w-full cursor-pointer rounded bg-ink-300"
         style={{ accentColor: color }}
       />
       <p className="mt-1.5 text-[11.5px] text-ash-300">{help}</p>
@@ -121,16 +119,6 @@ export const SettingsPage: React.FC = () => {
           immediately changes how zones are classified on the map and in the alert feed.
         </p>
       </div>
-
-      {!isAdmin && (
-        <div className="flex items-start gap-2.5 rounded-lg border border-line bg-ink-100 px-4 py-3 text-[13px] text-ash-200">
-          <Lock className="mt-0.5 h-4 w-4 flex-none text-risk-medium" />
-          <span>
-            You are signed in as <span className="font-mono text-ash-100">{user?.role}</span>. These
-            values are read-only for your role — only an administrator can change them.
-          </span>
-        </div>
-      )}
 
       {error && (
         <div className="rounded-lg border border-risk-high/40 bg-risk-high/10 px-4 py-3 text-[13px] text-risk-high">
@@ -202,9 +190,8 @@ export const SettingsPage: React.FC = () => {
             <input
               type="checkbox"
               checked={draft.alerts_enabled}
-              disabled={!isAdmin}
-              onChange={(e) => set({ alerts_enabled: e.target.checked })}
-              className="h-4 w-4 flex-none accent-[#2DD4E4] disabled:opacity-50"
+                    onChange={(e) => set({ alerts_enabled: e.target.checked })}
+              className="h-4 w-4 flex-none accent-[#2DD4E4]"
             />
           </label>
 
@@ -215,10 +202,9 @@ export const SettingsPage: React.FC = () => {
                 <button
                   key={sev}
                   type="button"
-                  disabled={!isAdmin}
-                  onClick={() => set({ alert_min_severity: sev })}
+                            onClick={() => set({ alert_min_severity: sev })}
                   className={[
-                    'rounded-lg border px-3 py-1.5 font-mono text-[11px] transition-colors disabled:opacity-50',
+                    'rounded-lg border px-3 py-1.5 font-mono text-[11px] transition-colors',
                     draft.alert_min_severity === sev
                       ? 'border-accent bg-accent-soft text-accent'
                       : 'border-line bg-ink-200 text-ash-300 hover:text-ash-100',
@@ -232,7 +218,7 @@ export const SettingsPage: React.FC = () => {
         </fieldset>
 
         <div className="flex items-center gap-3">
-          <button type="submit" className="btn-primary" disabled={!isAdmin || !dirty || !ordered || saving}>
+          <button type="submit" className="btn-primary" disabled={!dirty || !ordered || saving}>
             {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             {saving ? 'Saving…' : 'Save cut-offs'}
           </button>

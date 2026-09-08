@@ -48,10 +48,17 @@
    - **A**: No. The platform provides probabilistic, area-level and time-window risk estimates for decision support. It is strictly a tactical resource allocation tool for law enforcement patrols.
 
 8. **Q: How is access control enforced?**
-   - **A**: FastAPI backend integrates Bcrypt password hashing (Salt factor 12) with JWT bearer tokens, enforcing Role-Based Access Control (`Admin`, `Investigator`, `Analyst`).
+   - **A**: This build is deliberately public-access — there is no authentication layer, so that
+     judges and reviewers can reach every screen without credentials. Nothing sensitive is exposed:
+     the dataset is 100% synthetic and contains no real complaints, people, accounts or locations.
+
+     Accountability is handled by the audit ledger rather than by identity: every prediction and
+     every threshold change is recorded with its parameters, its before/after values and a
+     timestamp. A deployment handling real complaint data would need authentication and per-officer
+     attribution added back before going anywhere near production.
 
 9. **Q: What happens if an investigator executes unauthorized queries?**
-   - **A**: All user interactions, prediction requests, and parameter modifications are persisted to an append-only `audit_logs` table (SQLite by default; the ORM layer is engine-agnostic) with actor email, role, IP address, and telemetry details.
+   - **A**: All user interactions, prediction requests, and parameter modifications are persisted to an append-only `audit_logs` table (SQLite by default; the ORM layer is engine-agnostic) with a timestamp, IP address and telemetry details. With no login there is no per-officer attribution; actions are recorded against a fixed public identity.
 
 ---
 
@@ -99,8 +106,9 @@ carries a 68.2% cash-out rate against 51.1% by day, and the model's response tra
 zone scores about 0.37 at noon and 0.61 at midnight. Moving the slider on the Overview or Risk map
 screen re-scores all 100 zones and repaints them.
 
-**Q: Can I call the API without logging in?**
+**Q: Is the API open?**
 
-No. Every protected endpoint returns 401 without a bearer token, and `tests/test_regressions.py`
-asserts it for each one. Sign in as the analyst account to see RBAC refuse the audit log and the
-threshold controls.
+Yes — by design. This build has no authentication, so every endpoint answers an unauthenticated
+request, and `tests/test_regressions.py` asserts exactly that for each one so an access check
+cannot be reintroduced by accident. The data is entirely synthetic, which is what makes that
+acceptable here.

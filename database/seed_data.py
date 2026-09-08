@@ -1,8 +1,10 @@
 """
 SIH26184: Database Seeder Script
 ================================
-Populates database with demo user credentials (Admin, Investigator, Analyst),
-100 surveillance areas, and synthetic complaint events.
+Populates the database with 100 surveillance areas and synthetic complaint events.
+
+There are no user accounts to seed: the application is public-access and has no
+authentication.
 """
 
 import os
@@ -18,11 +20,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
 from backend.app.database import engine, Base, SessionLocal
-from backend.app.models.user import User
 from backend.app.models.area import Area
 from backend.app.models.complaint import Complaint
 from backend.app.models.audit_log import AuditLog
-from backend.app.core.security import get_password_hash
 
 DATA_DIR = os.path.join(BASE_DIR, "data")
 
@@ -36,48 +36,10 @@ def seed_database():
     db = SessionLocal()
 
     try:
-        # 2. Seed Users
-        print("\n[1/4] Seeding Demo User Accounts with Bcrypt Hashing...")
-        demo_users = [
-            {
-                "email": "admin@cyberintel.gov.in",
-                "password": "Admin@SIH2026!",
-                "full_name": "Inspector General R. Sharma (Admin)",
-                "role": "admin"
-            },
-            {
-                "email": "investigator@cyberintel.gov.in",
-                "password": "Investigate@2026!",
-                "full_name": "Senior Cyber Investigator K. Mehta",
-                "role": "investigator"
-            },
-            {
-                "email": "analyst@cyberintel.gov.in",
-                "password": "Analyst@2026!",
-                "full_name": "Intelligence Analyst P. Nair",
-                "role": "analyst"
-            }
-        ]
-
-        for u in demo_users:
-            existing = db.query(User).filter(User.email == u["email"]).first()
-            if not existing:
-                new_user = User(
-                    email=u["email"],
-                    hashed_password=get_password_hash(u["password"]),
-                    full_name=u["full_name"],
-                    role=u["role"],
-                    is_active=True
-                )
-                db.add(new_user)
-                print(f"  [+] Created user: {u['email']} [{u['role'].upper()}]")
-            else:
-                print(f"  [.] User already exists: {u['email']}")
-
         db.commit()
 
         # 3. Seed Areas
-        print("\n[2/4] Seeding 100 Surveillance Grid Areas...")
+        print("\n[1/3] Seeding 100 Surveillance Grid Areas...")
         areas_json_path = os.path.join(DATA_DIR, "synthetic_areas.json")
         if os.path.exists(areas_json_path):
             with open(areas_json_path, "r", encoding="utf-8") as f:
@@ -106,7 +68,7 @@ def seed_database():
             print(f"  [+] Seeded {len(areas_data)} surveillance zones.")
 
         # 4. Seed Sample Complaints
-        print("\n[3/4] Seeding Sample Cybercrime Complaint Events...")
+        print("\n[2/3] Seeding Sample Cybercrime Complaint Events...")
         complaints_csv = os.path.join(DATA_DIR, "cleaned_complaints.csv")
         if not os.path.exists(complaints_csv):
             complaints_csv = os.path.join(DATA_DIR, "synthetic_complaints.csv")
@@ -151,7 +113,7 @@ def seed_database():
                 print(f"  [.] Database already has {existing_count} complaints.")
 
         # 5. Seed Initial System Audit Log
-        print("\n[4/4] Recording System Initialization in Audit Ledger...")
+        print("\n[3/3] Recording System Initialization in Audit Ledger...")
         init_log = AuditLog(
             actor_email="system@cyberintel.gov.in",
             actor_role="system",

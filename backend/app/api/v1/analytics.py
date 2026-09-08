@@ -8,8 +8,6 @@ from sqlalchemy import func, case
 from backend.app.database import get_db
 from backend.app.models.area import Area
 from backend.app.models.complaint import Complaint
-from backend.app.models.user import User
-from backend.app.core.rbac import get_current_user
 from backend.app.schemas.analytics_schema import AnalyticsTrendsResponse
 from backend.app.config import settings
 
@@ -37,7 +35,7 @@ def _regional_matrix(db: Session):
             func.avg(Area.baseline_risk_score).label("avg_risk"),
             func.count(Complaint.id).label("complaints"),
             func.sum(Complaint.target_cash_withdrawal_event).label("cash_outs"),
-            func.avg(Area.atm_pos_density).label("atm_density_avg"),
+            func.avg(Area.atm_pos_density).label("atm_density_avg")
         )
         .outerjoin(Complaint, Complaint.area_id == Area.area_id)
         .group_by(Area.region)
@@ -59,7 +57,7 @@ def _amount_buckets(db: Session):
         db.query(
             Complaint.transaction_amount_bucket.label("bucket"),
             func.count(Complaint.id).label("count"),
-            func.sum(Complaint.target_cash_withdrawal_event).label("cash_outs"),
+            func.sum(Complaint.target_cash_withdrawal_event).label("cash_outs")
         )
         .group_by(Complaint.transaction_amount_bucket)
         .all()
@@ -91,7 +89,7 @@ def _from_eda(key: str):
 
 
 @router.get("/trends", response_model=AnalyticsTrendsResponse)
-def get_analytics_trends(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def get_analytics_trends(db: Session = Depends(get_db)):
     """Temporal curves from the EDA pass, plus regional and amount aggregates computed live."""
     meta_path = os.path.join(settings.MODEL_DIR, "model_metadata.json")
     model_summary = {}
@@ -108,5 +106,5 @@ def get_analytics_trends(db: Session = Depends(get_db), current_user: User = Dep
         transaction_type_breakdown=_from_eda("transaction_type_breakdown"),
         regional_risk_matrix=_regional_matrix(db),
         amount_bucket_distribution=_amount_buckets(db),
-        model_performance_summary=model_summary,
+        model_performance_summary=model_summary
     )

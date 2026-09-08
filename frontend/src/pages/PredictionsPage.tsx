@@ -239,11 +239,15 @@ export const PredictionsPage: React.FC = () => {
 
                 <div>
                   <label className="block text-xs font-semibold text-ash-200 mb-1">Amount (₹)</label>
+                  {/* step must divide the range measured from min, or the field's
+                      own default value is rejected by native validation: with
+                      min=500 and step=1000 the valid points were 44500 and 45500,
+                      never the 45000 the form starts on. */}
                   <input
                     type="number"
                     min="500"
                     max="500000"
-                    step="1000"
+                    step="500"
                     value={amount}
                     onChange={(e) => setAmount(parseFloat(e.target.value) || 500)}
                     className="w-full bg-ink-200 border border-line rounded-lg px-3 py-1.5 text-xs text-ash-100 focus:outline-none focus:border-cyan-500 font-mono"

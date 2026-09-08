@@ -4,7 +4,7 @@
 ### Overview
 The system is built as a three-tier modular decision-support system:
 1. **Frontend Tier (Presentation)**: React 18, TypeScript, Tailwind CSS, Leaflet Maps, and Recharts.
-2. **Backend API Tier (Application & Security)**: FastAPI, Pydantic v2, Python-Jose (JWT), SQLAlchemy 2.0 ORM.
+2. **Backend API Tier (Application)**: FastAPI, Pydantic v2, SQLAlchemy 2.0 ORM. Public-access — no authentication layer.
 3. **Machine Learning & Intelligence Tier (Data & Inference)**: Scikit-learn (Logistic Regression, Random Forest and Gradient Boosting benchmarked; Logistic Regression (Baseline) currently selected on ROC-AUC), counterfactual-ablation attribution, cyclical temporal encoding plus an explicit night-window flag, and a train-time leakage guard.
 
 ### Core Guarantees

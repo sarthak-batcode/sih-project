@@ -4,7 +4,6 @@ import {
   LayoutDashboard, Map, Crosshair, BarChart3,
   Cpu, FileText, Settings, ShieldAlert,
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
 
 /**
  * Labels are the words an officer would use, not the module names from the
@@ -17,20 +16,17 @@ const NAV = [
   { to: '/predictions', label: 'Predictions', icon: Crosshair },
   { to: '/analytics', label: 'Trends', icon: BarChart3 },
   { to: '/model-insights', label: 'Model & governance', icon: Cpu },
-  { to: '/audit-logs', label: 'Audit log', icon: FileText, roles: ['admin', 'investigator'] },
+  { to: '/audit-logs', label: 'Audit log', icon: FileText },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
 export const Sidebar: React.FC = () => {
-  const { user } = useAuth();
-  const role = user?.role ?? 'analyst';
-
   return (
     <aside className="hidden w-52 flex-none flex-col justify-between gap-6 border-r border-line bg-[#070C17] px-2.5 py-4 md:flex">
       <div>
         <div className="label px-2.5 pb-2">Modules</div>
         <nav className="flex flex-col gap-0.5">
-          {NAV.filter((i) => !i.roles || i.roles.includes(role)).map(({ to, label, icon: Icon, exact }) => (
+          {NAV.map(({ to, label, icon: Icon, exact }) => (
             <NavLink
               key={to}
               to={to}

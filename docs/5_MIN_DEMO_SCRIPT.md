@@ -31,7 +31,7 @@
   > answers 'yes' to everything. It scores F1 0.73 — which is why we do not select on F1.
   > We select on ROC-AUC, where that trivial model scores 0.5 and ours scores 0.7636.
   > The panel above the table names the column we excluded as target leakage, and the training run
-  > fails if it ever comes back. Every prediction, login and threshold change is written to the
+  > fails if it ever comes back. Every prediction and threshold change is written to the
   > audit ledger."*
 
   > If a judge asks why the numbers are not higher: because the earlier ones were not real. The

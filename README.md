@@ -82,7 +82,7 @@ features, and the API labels the method it used.
                                               ▼
                                   ┌────────────────────────┐
                                   │ FastAPI REST Backend   │
-                                  │ (JWT + RBAC + Audit)   │
+                                  │ (public + audit trail) │
                                   └───────────┬────────────┘
                                               ▼
                                   ┌────────────────────────┐
@@ -98,7 +98,7 @@ features, and the API labels the method it used.
 | Tier | Technologies |
 |---|---|
 | **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, Lucide Icons, Leaflet Maps, Recharts |
-| **Backend API** | Python 3.11+, FastAPI, Pydantic v2, Uvicorn, Python-Jose (JWT), Passlib (Bcrypt) |
+| **Backend API** | Python 3.11+, FastAPI, Pydantic v2, Uvicorn, SQLAlchemy 2.0 |
 | **Database** | SQLite via SQLAlchemy 2.0 ORM (schema created at startup; no migration tool) |
 | **Machine Learning** | Scikit-Learn (Logistic Regression, Random Forest, Gradient Boosting), Pandas, NumPy, Joblib |
 | **Testing** | Pytest, HTTPX, TypeScript Compiler (`tsc`) |
@@ -177,13 +177,14 @@ The application will be accessible at:
 
 ---
 
-## 👥 Demo User Credentials
+## 🔓 Access
 
-| Role | Email | Password | Access Scope |
-|---|---|---|---|
-| **Administrator** | `admin@cyberintel.gov.in` | `Admin@SIH2026!` | Full system access, audit logs, model tuning |
-| **Investigator** | `investigator@cyberintel.gov.in` | `Investigate@2026!` | Risk predictions, area inspections, alerts |
-| **Analyst** | `analyst@cyberintel.gov.in` | `Analyst@2026!` | Dashboards, trend charts, model metrics |
+The application is **public-access**: there is no login, no user accounts and no roles. Opening the
+site lands directly on the dashboard and every screen — including the audit log and the threshold
+controls — is reachable without credentials.
+
+The audit ledger still records what happened and when; with no signed-in officer, actions are
+attributed to `public@cyberintel.gov.in`.
 
 ---
 
@@ -194,7 +195,7 @@ The application will be accessible at:
 ```powershell
 python -m pytest -q                       # 41 tests, including regression tests
 curl http://localhost:8000/api/v1/health/model   # what model is loaded, and what was excluded
-curl http://localhost:8000/api/v1/dashboard/summary   # 401 without a token — this is correct
+curl http://127.0.0.1:8000/api/v1/dashboard/summary   # 200, no credentials needed
 ```
 
 ---

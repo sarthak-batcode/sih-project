@@ -73,7 +73,6 @@ export const AuditLogsPage: React.FC = () => {
             className="bg-ink-200 border border-line rounded-lg px-3 py-1.5 text-xs text-ash-100 focus:outline-none focus:border-cyan-500"
           >
             <option value="">All Action Types</option>
-            <option value="LOGIN">Logins</option>
             <option value="PREDICTION">Predictions</option>
             <option value="USER">User Provisions</option>
             <option value="SYSTEM">System Events</option>

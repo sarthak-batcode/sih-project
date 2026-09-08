@@ -6,9 +6,7 @@ from sqlalchemy.orm import Session
 from backend.app.database import get_db
 from backend.app.models.area import Area
 from backend.app.models.prediction import PredictionRecord
-from backend.app.models.user import User
-from backend.app.core.rbac import get_current_user, require_roles
-from backend.app.core.audit_logger import log_audit_event
+from backend.app.core.audit_logger import log_audit_event, PUBLIC_ACTOR_EMAIL
 from backend.app.api.v1.settings import get_thresholds
 from backend.app.schemas.prediction_schema import (
     PredictionRequest, PredictionResponse, ContributingFactor,
@@ -22,8 +20,7 @@ router = APIRouter(prefix="/predict", tags=["Predictive Intelligence"])
 def predict_scenario_risk(
     payload: PredictionRequest,
     request: Request,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(["admin", "investigator", "analyst"]))
+    db: Session = Depends(get_db)
 ):
     """
     Executes real-time machine learning prediction for area + temporal window,
@@ -51,7 +48,7 @@ def predict_scenario_risk(
         complaint_category=payload.complaint_category,
         transaction_amount_bucket=payload.transaction_amount_bucket,
         area_baseline_risk_score=area_baseline,
-        thresholds=get_thresholds(db),
+        thresholds=get_thresholds(db)
     )
 
     # Persist prediction in DB for audit trail
@@ -68,7 +65,7 @@ def predict_scenario_risk(
         recommended_patrol_window=ml_out["recommended_patrol_window"],
         contributing_factors_json=json.dumps(ml_out["contributing_factors"]),
         model_version=ml_out["model_version"],
-        created_by_email=current_user.email
+        created_by_email=PUBLIC_ACTOR_EMAIL,
     )
     db.add(pred_rec)
     db.commit()
@@ -76,8 +73,6 @@ def predict_scenario_risk(
     # Log audit event
     log_audit_event(
         db=db,
-        actor_email=current_user.email,
-        actor_role=current_user.role,
         action="PREDICTION_GENERATED",
         resource=f"/predict/{payload.area_id}",
         details={
@@ -110,8 +105,7 @@ def predict_scenario_risk(
 def batch_evaluate_all_areas(
     hour: int = 22,
     day_of_week: int = 5,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     """Computes automated batch risk forecasts across all 100 surveillance areas."""
     areas = db.query(Area).all()
@@ -144,7 +138,7 @@ def batch_evaluate_all_areas(
             risk_level=b["risk_level"],
             atm_pos_density=a.atm_pos_density,
             recommended_patrol_window=b["recommended_patrol_window"],
-            active_surveillance=a.active_surveillance,
+            active_surveillance=a.active_surveillance
         ))
     crit_count = counts["CRITICAL"]
     high_count = counts["HIGH"]

@@ -3,8 +3,6 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from backend.app.database import get_db
 from backend.app.models.audit_log import AuditLog
-from backend.app.models.user import User
-from backend.app.core.rbac import require_roles
 from backend.app.schemas.audit_schema import AuditLogResponse
 
 router = APIRouter(prefix="/audit", tags=["Audit & Compliance"])
@@ -14,8 +12,7 @@ def get_audit_logs(
     action: Optional[str] = Query(None, description="Filter by action keyword"),
     actor_email: Optional[str] = Query(None, description="Filter by officer email"),
     limit: int = Query(50, ge=1, le=200),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(["admin", "investigator"]))
+    db: Session = Depends(get_db)
 ):
     """
     Returns the audit trail of authentications, predictions and configuration changes.
