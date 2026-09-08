@@ -8,7 +8,7 @@ import {
 // ::1 first, a uvicorn bound to 127.0.0.1 (its default) is unreachable and every
 // request fails with a connection error that surfaces as a confusing CORS
 // message. Override with VITE_API_BASE_URL if the API lives elsewhere.
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://sih-backend-s3em.onrender.com/api/v1';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
